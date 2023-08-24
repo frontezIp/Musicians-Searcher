@@ -1,15 +1,15 @@
 version: '3.8'
 
 services:
-    #sqlserver: 
-    #    container_name: SqlServer
-    #    image: mcr.microsoft.com/mssql/server:2022-latest
-    #    ports:
-    #      - 1433:1433
-    #    environment:
-    #      - ACCEPT_EULA=Y
-    #      - MSSQL_SA_PASSWORD=Passw0rd
-    #    restart: unless-stopped
+    sqlserver: 
+        container_name: SqlServer
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        ports:
+          - 1433:1433
+        environment:
+          - ACCEPT_EULA=Y
+          - MSSQL_SA_PASSWORD=passw0rd
+        restart: unless-stopped
 
     postgres:
         container_name: Postgres
@@ -20,16 +20,64 @@ services:
             - POSTGRES_PASSWORD=password
             - POSTGRES_USER=username
             - POSTGRES_DB=identity
+        restart: unless-stopped 
+     
+    mongo:
+        container_name: Mongo
+        image: mongo
+        ports:
+            - 27017:27017
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME:root
+            - MONGO_INITDB_ROOT_PASSWORD:password
         restart: unless-stopped
-            
+
+    mongo-express:
+        image: mongo-express
+        ports:
+            - 8081:8081
+        environment: 
+            - ME_CONFIG_MONGODB_ADMINUSERNAME:root
+            - ME_CONFIG_MONGODB_ADMINPASSWORD:password
+        depends_on:
+            - mongo
+        restart: unless-stopped
+
     identity:
         container_name: Identity
         build:
             context: "."
             dockerfile: "/Services/Identity/Identity.API/Dockerfile"
+        depends_on:
+            - postgres
         ports:
             - 1000:80
         environment:
             - ASPNETCORE_ENVIRONMENT=Docker 
         restart: unless-stopped
+
+    chat:
+        container_name: Chat
+        build:
+            context: "."
+            dockerfile: "/Services/Chat/Chat.API/Dockerfile"
+        depends_on:
+            - sqlserver
+        ports:
+            - 2000:80
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Docker 
+        restart: unless-stopped
     
+    musicians:
+        container_name: Musicians
+        build:
+            context: "."
+            dockerfile: "/Services/Musicians/Musicians.API/Dockerfile"
+        depends_on:
+            - mongo
+        ports:
+            - 3000:80 
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Docker
+        restart: unless-stopped
