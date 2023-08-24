@@ -1,5 +1,4 @@
 using Identity.Infrastructure.Extensions;
-using Identity.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
