@@ -10,13 +10,6 @@ namespace Identity.API
             services.AddControllers();
         }
 
-        public static async Task ApplyMigrations(this IApplicationBuilder app)
-        {
-            using var services = app.ApplicationServices.CreateScope();
 
-            var dbContext = services.ServiceProvider.GetService<IdentityContext>();
-
-            await dbContext?.Database.MigrateAsync();
-        }
     }
 }
