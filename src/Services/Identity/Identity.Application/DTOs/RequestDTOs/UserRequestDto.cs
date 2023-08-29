@@ -1,10 +1,4 @@
-﻿using Identity.Domain.Models;
-using Shared.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Shared.Enums;
 
 namespace Identity.Application.DTOs.RequestDTOs
 {

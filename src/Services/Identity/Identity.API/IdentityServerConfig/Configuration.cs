@@ -2,7 +2,6 @@
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
-using System.Diagnostics;
 
 namespace Identity.API.IdentityServerConfig
 {

@@ -3,8 +3,6 @@ using FluentValidation.Results;
 using Identity.API.Extensions;
 using Identity.Application.DTOs.RequestDTOs;
 using Identity.Application.Interfaces.Services;
-using Identity.Domain.Models;
-using Identity.Infrastructure.Persistance.Contexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Constants;
