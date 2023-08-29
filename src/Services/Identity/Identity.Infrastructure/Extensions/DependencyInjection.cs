@@ -1,11 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
 using Identity.Domain.Models;
 using Identity.Infrastructure.Persistance.Contexts;
-using System.Diagnostics;
 
 namespace Identity.Infrastructure.Extensions
 {

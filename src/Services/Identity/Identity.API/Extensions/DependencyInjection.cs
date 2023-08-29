@@ -1,7 +1,4 @@
-﻿using Identity.Infrastructure.Persistance.Contexts;
-using Microsoft.EntityFrameworkCore;
-
-namespace Identity.API
+﻿namespace Identity.API
 {
     public static class DependencyInjection
     {
