@@ -1,7 +1,7 @@
 ﻿using Identity.Domain.Models;
+using Identity.Infrastructure.Persistance.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace Identity.Infrastructure.Persistance.Contexts
 {
@@ -17,7 +17,7 @@ namespace Identity.Infrastructure.Persistance.Contexts
         {
             base.OnModelCreating(builder);
 
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            builder.ApplyConfigurationsFromAssembly(EntityConfigurationAssemblyRefrence.Assembly);
         }
     }
 }
