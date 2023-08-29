@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+    sqlserver: 
+        ports:
+          - 1433:1433
+        environment:
+          - ACCEPT_EULA=Y
+          - MSSQL_SA_PASSWORD=passw0rd
+
+    postgres:
+        ports:
+            - 5432:5432   
+        environment:
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_USER=username
+            - POSTGRES_DB=identity
+     
+    mongo:
+        ports:
+            - 27017:27017
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME:root
+            - MONGO_INITDB_ROOT_PASSWORD:password
+
+    mongo-express:
+        ports:
+            - 8081:8081
+        environment: 
+            - ME_CONFIG_MONGODB_ADMINUSERNAME:root
+            - ME_CONFIG_MONGODB_ADMINPASSWORD:password
+
+    identity:
+        ports:
+            - 1000:80
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Docker 
+
+    chat:
+        ports:
+            - 2000:80
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Docker 
+    
+    musicians:
+        ports:
+            - 3000:80 
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Docker
