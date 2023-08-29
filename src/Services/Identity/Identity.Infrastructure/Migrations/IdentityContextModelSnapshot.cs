@@ -39,7 +39,7 @@ namespace Identity.Infrastructure.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("Identity.Domain.Models.Country", b =>
@@ -55,7 +55,7 @@ namespace Identity.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("Identity.Domain.Models.Role", b =>
