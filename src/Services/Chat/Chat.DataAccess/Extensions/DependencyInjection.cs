@@ -17,6 +17,5 @@ namespace Chat.DataAccess.Extensions
             services.AddDbContext<ChatContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
         }
-
     }
 }

@@ -19,6 +19,5 @@ namespace Identity.Infrastructure.Persistance.Contexts
 
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
-
     }
 }

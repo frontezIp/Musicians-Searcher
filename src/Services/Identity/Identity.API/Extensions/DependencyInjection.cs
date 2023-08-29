@@ -6,7 +6,5 @@
         {
             services.AddControllers();
         }
-
-
     }
 }
