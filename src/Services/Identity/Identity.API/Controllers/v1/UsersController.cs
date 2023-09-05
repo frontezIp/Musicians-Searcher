@@ -56,13 +56,9 @@ namespace Identity.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateUserAsync(UserRequestDto userForCreation)
         {
-            ValidationResult result = await _validator.ValidateAsync(userForCreation);
-            if (!result.IsValid)
-            {
-                _logger.LogInformation("Invalid users credentials");
-                result.AddToModelState(ModelState);
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            }
+
             var createdUser = await _userService.CreateUserAsync(userForCreation);
 
             return CreatedAtRoute("UserById", new { userId = createdUser.Id }, createdUser);

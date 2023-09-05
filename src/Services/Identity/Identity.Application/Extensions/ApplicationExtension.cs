@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.AspNetCore;
 using Identity.Application.Interfaces.Services;
 using Identity.Application.Interfaces.ServiceValidators;
 using Identity.Application.Services;
@@ -35,6 +36,7 @@ namespace Identity.Application.Extensions
 
         private static void ConfigureFluentValidation(this IServiceCollection services)
         {
+            services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssembly(ValidatorsAssemblyReference.Assembly);
         }
 
