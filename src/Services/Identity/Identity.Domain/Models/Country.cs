@@ -1,8 +1,7 @@
 ﻿namespace Identity.Domain.Models
 {
-    public class Country
+    public class Country : BaseEntity
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = null!;
         public List<City> Cities { get; set; } = new();
     }
