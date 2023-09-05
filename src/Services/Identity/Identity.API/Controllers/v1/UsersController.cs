@@ -34,7 +34,8 @@ namespace Identity.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetUsersAsync()
         {
-            var usersToReturn = await _userService.GetAllUsersAsync();
+            var usersToReturn = await _userService.GetAllUsersAsync()
+                ;
             return Ok(usersToReturn);
         }
 
@@ -45,6 +46,7 @@ namespace Identity.API.Controllers.v1
         public async Task<IActionResult> GetUserAsync(Guid userId)
         {
             var userToReturn = await _userService.GetUserByIdAsync(userId);
+
             return Ok(userToReturn);
         }
 
@@ -62,6 +64,7 @@ namespace Identity.API.Controllers.v1
                 return BadRequest(ModelState);
             }
             var createdUser = await _userService.CreateUserAsync(userForCreation);
+
             return CreatedAtRoute("UserById", new { userId = createdUser.Id }, createdUser);
         }
 
@@ -72,6 +75,7 @@ namespace Identity.API.Controllers.v1
         public async Task<IActionResult> GetUserRolesAsync(Guid userId)
         {
             var rolesToReturn = await _userService.GetUserRolesAsync(userId);
+
             return Ok(rolesToReturn);
         }
 
@@ -81,6 +85,7 @@ namespace Identity.API.Controllers.v1
         public async Task<IActionResult> GetCurrentUserAsync()
         {
             var userToReturn = await _userService.GetCurrentUserAsync();
+
             return Ok(userToReturn);
         }
     }

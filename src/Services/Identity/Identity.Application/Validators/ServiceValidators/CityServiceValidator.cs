@@ -19,6 +19,7 @@ namespace Identity.Application.Validators.ServiceValidators
             var city = await _cityRepository.GetCityById(cityId, trackChanges);
             if (city == null)
                 throw new CityNotFoundException();
+
             return city;
         }
     }

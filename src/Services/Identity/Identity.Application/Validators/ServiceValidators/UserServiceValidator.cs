@@ -21,6 +21,7 @@ namespace Identity.Application.Validators.ServiceValidators
             {
                 throw new UserNotFoundException();
             }
+
             return user;
         }
     }

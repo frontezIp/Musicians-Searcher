@@ -53,12 +53,13 @@ namespace Identity.Application.Services
             var result = await _userManager.CreateAsync(userDto, user.Password);
             if (!result.Succeeded)
             {
-                throw new UserInvalidCredentialsBadRequestException(result.Errors.First().ToString() ?? "Invalid credentials");
+                throw new UserInvalidCredentialsBadRequestException(result.Errors.First().Description.ToString() ?? "Invalid credentials");
             }
             _logger.LogInformation("User with {Id} id was successfully created", userDto.Id);
             await _userManager.AddToRoleAsync(userDto, RoleNamesConstants.UserRoleName);
             userDto.City = city;
             var userToReturn = _mapper.Map<UserResponseDto>(userDto);
+
             return userToReturn;
         }
 
@@ -70,6 +71,7 @@ namespace Identity.Application.Services
                       .AsNoTracking().ToListAsync();
             var usersDtos = _mapper.Map<IEnumerable<UserResponseDto>>(allUsers);
             _logger.LogInformation("All users was successfully retrieved");
+
             return usersDtos;
         }
 
@@ -80,6 +82,7 @@ namespace Identity.Application.Services
             user.City = city;
             var userDto = _mapper.Map<UserResponseDto>(user);
             _logger.LogInformation("User with {Id} id was successfully retrieved", user.Id);
+
             return userDto;
         }
 
@@ -89,6 +92,7 @@ namespace Identity.Application.Services
             var roleNames = await _userManager.GetRolesAsync(user);
             var roles = await _roleManager.Roles.AsNoTracking().Where(r => roleNames.Contains(r.Name)).ToListAsync();
             _logger.LogInformation("All roles of the user with {Id} was successfully retrieved", user.Id);
+
             return _mapper.Map<IEnumerable<RoleResponseDto>>(roles);
         }
 
@@ -98,6 +102,7 @@ namespace Identity.Application.Services
             var city = await _cityRepository.GetCityById(user.CityId, false);
             user.City = city;
             var userDto = _mapper.Map<UserResponseDto>(user);
+
             return userDto;
         }
     }
