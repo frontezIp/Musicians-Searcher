@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Identity.Application.Interfaces.ServiceValidators
+namespace Identity.Application.Interfaces.ServiceHelpers
 {
-    public interface ICityServiceValidator
+    public interface ICityServiceHelper
     {
         Task<City> CheckIfCityExistsAndGetAsync(Guid cityId, bool trackChanges);
     }

@@ -1,15 +1,15 @@
-﻿using Identity.Application.Interfaces.ServiceValidators;
+﻿using Identity.Application.Interfaces.ServiceHelpers;
 using Identity.Domain.Exceptions.NotFoundException;
 using Identity.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace Identity.Application.Validators.ServiceValidators
+namespace Identity.Application.Validators.ServiceHelpers
 {
-    internal class UserServiceValidator : IUserServiceValidator
+    internal class UserServiceHelper : IUserServiceHelper
     {
         private readonly UserManager<User> _userManager;
 
-        public UserServiceValidator(UserManager<User> userManager)
+        public UserServiceHelper(UserManager<User> userManager)
         {
             _userManager = userManager;
         }

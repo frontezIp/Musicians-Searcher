@@ -2,11 +2,8 @@
 
 namespace Identity.Application.Interfaces.Persistance
 {
-    public interface ICityRepository
+    public interface ICityRepository : IRepositoryBase<City>
     {
-        Task<List<City>> GetAllCitiesAsync(bool trackChanges);
-        void CreateCity(City country);
-        void DeleteCity(City country);
-        Task<City?> GetCityById(Guid id, bool trackChanges);
+        Task<City?> GetCityByIdWithIncludedCountry(Guid id, bool trackChanges);
     }
 }

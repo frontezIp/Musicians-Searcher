@@ -1,4 +1,5 @@
 ﻿using Identity.Application.Interfaces.Persistance;
+using Identity.Domain.Models;
 using Identity.Infrastructure.Persistance.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -6,7 +7,7 @@ using System.Linq.Expressions;
 namespace Identity.Infrastructure.Persistance.Repositories
 {
     internal class RepositoryBase<T> : IRepositoryBase<T>
-        where T : class
+        where T : BaseEntity
     {
         protected IdentityContext Context { get; init; }
 
@@ -30,15 +31,29 @@ namespace Identity.Infrastructure.Persistance.Repositories
             Context.Set<T>().Remove(entity);
         }
 
-        public IQueryable<T> GetAllAsync(bool trackChanges)
+        public IQueryable<T> GetAll(bool trackChanges)
         {
             return !trackChanges ?
-                Context.Set<T>()
+                 Context.Set<T>()
                     .AsNoTracking() :
-                Context.Set<T>();
+                 Context.Set<T>();
         }
 
-        public IQueryable<T> GetByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
+        public async Task<IEnumerable<T>> GetAllAsync(bool trackChanges)
+        {
+            var query = GetAll(trackChanges);
+
+            var entities = await query.ToListAsync();
+
+            return entities;
+        }
+
+        public async Task<T?> GetByIdAsync(Guid id, bool trackChanges)
+        {
+            return await GetByCondition(entity => entity.Id == id, trackChanges).SingleOrDefaultAsync();
+        }
+
+        public IQueryable<T> GetByCondition(Expression<Func<T, bool>> expression, bool trackChanges)
         {
             return !trackChanges ? 
                 Context.Set<T>()
@@ -46,6 +61,11 @@ namespace Identity.Infrastructure.Persistance.Repositories
                     .AsNoTracking() :
                 Context.Set<T>()
                     .Where(expression);
+        }
+
+        public void Update(T entity)
+        {
+            Context.Set<T>().Update(entity);
         }
     }
 }

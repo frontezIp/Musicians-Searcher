@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using Identity.Application.Interfaces.ServiceHelpers;
 using Identity.Application.Interfaces.Services;
-using Identity.Application.Interfaces.ServiceValidators;
 using Identity.Application.Services;
 using Identity.Application.Validators;
-using Identity.Application.Validators.ServiceValidators;
+using Identity.Application.Validators.ServiceHelpers;
 using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,8 +30,8 @@ namespace Identity.Application.Extensions
 
         private static void ConfigureServiceValidators(this IServiceCollection services)
         {
-            services.AddScoped<IUserServiceValidator, UserServiceValidator>();
-            services.AddScoped<ICityServiceValidator, CityServiceValidator>();
+            services.AddScoped<IUserServiceHelper, UserServiceHelper>();
+            services.AddScoped<ICityServiceHelper, CityServiceHelper>();
         }
 
         private static void ConfigureFluentValidation(this IServiceCollection services)

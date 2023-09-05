@@ -11,24 +11,9 @@ namespace Identity.Infrastructure.Persistance.Repositories
         {
         }
 
-        public void CreateCity(City city)
+        public async Task<City?> GetCityByIdWithIncludedCountry(Guid id,  bool trackChanges)
         {
-            Create(city);
-        }
-
-        public void DeleteCity(City city)
-        {
-            Delete(city);
-        }
-
-        public async Task<List<City>> GetAllCitiesAsync(bool trackChanges)
-        {
-            return await GetAllAsync(trackChanges).ToListAsync();
-        }
-
-        public async Task<City?> GetCityById(Guid id,  bool trackChanges)
-        {
-            return await GetByConditionAsync(city => city.Id == id, trackChanges)
+            return await GetByCondition(city => city.Id == id, trackChanges)
                 .Include(c => c.Country)
                 .SingleOrDefaultAsync();
         }

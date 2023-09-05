@@ -11,24 +11,9 @@ namespace Identity.Infrastructure.Persistance.Repositories
         {
         }
 
-        public void CreateCountry(Country country)
-        {
-            Create(country);
-        }
-
-        public void DeleteCountry(Country country)
-        {
-            Delete(country);
-        }
-
-        public async Task<List<Country>> GetAllCountriesAsync(bool trackChanges)
-        {
-            return await GetAllAsync(trackChanges).ToListAsync();
-        }
-
         public async Task<IEnumerable<Country>> GetAllCountriesWithIncludedCitiesAsync(bool trackChanges)
         {
-            return await GetAllAsync(trackChanges)
+            return await GetAll(trackChanges)
                 .Include(c => c.Cities)
                 .ToListAsync();
         }

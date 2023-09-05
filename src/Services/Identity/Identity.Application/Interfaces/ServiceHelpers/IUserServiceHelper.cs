@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Identity.Application.Interfaces.ServiceValidators
+namespace Identity.Application.Interfaces.ServiceHelpers
 {
-    public interface IUserServiceValidator
+    public interface IUserServiceHelper
     {
         Task<User> CheckIfUserExistsAndGetByIdAsync(Guid userId);
     }

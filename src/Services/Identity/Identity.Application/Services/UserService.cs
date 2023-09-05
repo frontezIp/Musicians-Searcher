@@ -4,7 +4,6 @@ using Identity.Application.Interfaces.Services;
 using Identity.Domain.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
-using Identity.Application.Interfaces.ServiceValidators;
 using Identity.Domain.Exceptions.BadRequestException;
 using Microsoft.EntityFrameworkCore;
 using Identity.Application.Interfaces.Persistance;
@@ -12,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Shared.Constants;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using Identity.Application.Interfaces.ServiceHelpers;
 
 namespace Identity.Application.Services
 {
@@ -20,8 +20,8 @@ namespace Identity.Application.Services
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly ICityRepository _cityRepository;
-        private readonly IUserServiceValidator _userServiceValidator;
-        private readonly ICityServiceValidator _cityServiceValidator;
+        private readonly IUserServiceHelper _userServiceHelper;
+        private readonly ICityServiceHelper _cityServiceHelper;
         private readonly IMapper _mapper;
         private readonly ILogger<UserService> _logger;
         private readonly IHttpContextAccessor _contextAccessor;
@@ -29,8 +29,8 @@ namespace Identity.Application.Services
         public UserService(UserManager<User> userManager,
             RoleManager<Role> roleManager,
             IMapper mapper,
-            IUserServiceValidator userServiceValidator,
-            ICityServiceValidator cityServiceValidator,
+            IUserServiceHelper userServiceHelper,
+            ICityServiceHelper cityServiceHelper,
             ICityRepository cityRepository,
             ILogger<UserService> logger,
             IHttpContextAccessor contextAccessor
@@ -39,8 +39,8 @@ namespace Identity.Application.Services
             _userManager = userManager;
             _roleManager = roleManager;
             _mapper = mapper;
-            _userServiceValidator = userServiceValidator;
-            _cityServiceValidator = cityServiceValidator;
+            _userServiceHelper = userServiceHelper;
+            _cityServiceHelper = cityServiceHelper;
             _cityRepository = cityRepository;
             _logger = logger;
             _contextAccessor = contextAccessor;
@@ -48,7 +48,7 @@ namespace Identity.Application.Services
 
         public async Task<UserResponseDto> CreateUserAsync(UserRequestDto user)
         {
-            var city = await _cityServiceValidator.CheckIfCityExistsAndGetAsync(user.CityId, false);
+            var city = await _cityServiceHelper.CheckIfCityExistsAndGetAsync(user.CityId, false);
             var userDto = _mapper.Map<User>(user);
             var result = await _userManager.CreateAsync(userDto, user.Password);
             if (!result.Succeeded)
@@ -77,8 +77,8 @@ namespace Identity.Application.Services
 
         public async Task<UserResponseDto> GetUserByIdAsync(Guid id)
         {
-            var user = await _userServiceValidator.CheckIfUserExistsAndGetByIdAsync(id);
-            var city = await _cityRepository.GetCityById(user.CityId, false);
+            var user = await _userServiceHelper.CheckIfUserExistsAndGetByIdAsync(id);
+            var city = await _cityRepository.GetByIdAsync(user.CityId, false);
             user.City = city;
             var userDto = _mapper.Map<UserResponseDto>(user);
             _logger.LogInformation("User with {Id} id was successfully retrieved", user.Id);
@@ -88,7 +88,7 @@ namespace Identity.Application.Services
 
         public async Task<IEnumerable<RoleResponseDto>> GetUserRolesAsync(Guid userId)
         {
-            var user = await _userServiceValidator.CheckIfUserExistsAndGetByIdAsync(userId);
+            var user = await _userServiceHelper.CheckIfUserExistsAndGetByIdAsync(userId);
             var roleNames = await _userManager.GetRolesAsync(user);
             var roles = await _roleManager.Roles.AsNoTracking().Where(r => roleNames.Contains(r.Name)).ToListAsync();
             _logger.LogInformation("All roles of the user with {Id} was successfully retrieved", user.Id);
@@ -99,7 +99,7 @@ namespace Identity.Application.Services
         public async Task<UserResponseDto> GetCurrentUserAsync()
         {
             var user = await _userManager.FindByIdAsync(_contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var city = await _cityRepository.GetCityById(user.CityId, false);
+            var city = await _cityRepository.GetByIdAsync(user.CityId, false);
             user.City = city;
             var userDto = _mapper.Map<UserResponseDto>(user);
 
