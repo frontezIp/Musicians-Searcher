@@ -48,8 +48,6 @@ namespace Identity.API.Extensions
 
                     await context.SaveChangesAsync();
                 }
-
-
             }
         }
     }

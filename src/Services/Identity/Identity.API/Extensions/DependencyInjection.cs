@@ -27,7 +27,6 @@ namespace Identity.API
             });
         }
 
-
         private static void ConfigureVersioning(this IServiceCollection services)
         {
             services.AddApiVersioning(opt =>
@@ -37,7 +36,5 @@ namespace Identity.API
                 opt.DefaultApiVersion = new ApiVersion(1, 0);
             });
         }
-
-
     }
 }

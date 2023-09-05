@@ -62,7 +62,6 @@ namespace Identity.API.Extensions
             })
                 .AddEntityFrameworkStores<IdentityContext>()
                 .AddDefaultTokenProviders();
-            ;
         }
 
         private static void ConfigureIdentityServer(this IServiceCollection services, IConfiguration configuration)

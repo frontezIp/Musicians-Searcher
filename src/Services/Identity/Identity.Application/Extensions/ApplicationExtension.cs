@@ -13,7 +13,6 @@ namespace Identity.Application.Extensions
 {
     public static class ApplicationExtension
     {
-        
         public static void ConfigureApplication(this IServiceCollection services)
         {
             services.AddMappings();
