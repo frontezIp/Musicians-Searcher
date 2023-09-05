@@ -5,8 +5,6 @@ namespace Identity.Application.Interfaces.Persistance
     public interface IRepositoryBase<T>
     {
         Task<IEnumerable<T>> GetAllAsync(bool trackChanges);
-        IQueryable<T> GetByCondition(Expression<Func<T, bool>> expression,
-            bool trackChanges);
         void Create(T entity);  
         void Update(T entity);
         void Delete(T entity);
