@@ -6,6 +6,7 @@ namespace Identity.Application.Interfaces.Persistance
     {
         Task<List<Country>> GetAllCountriesAsync(bool trackChanges);
         void CreateCountry(Country country);
-        void DeleteCountry(Country country);    
+        void DeleteCountry(Country country);
+        Task<IEnumerable<Country>> GetAllCountriesWithIncludedCitiesAsync(bool trackChanges);
     }
 }

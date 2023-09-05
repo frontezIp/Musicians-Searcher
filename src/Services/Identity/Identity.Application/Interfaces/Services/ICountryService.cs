@@ -2,8 +2,8 @@
 
 namespace Identity.Application.Interfaces.Services
 {
-    public interface ICityService
+    public interface ICountryService
     {
-        public Task<CityResponseDto> GetAllCitiesAsync();
+        Task<IEnumerable<CountryResponseDto>> GetAllLocationsAsync();
     }
 }

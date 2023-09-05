@@ -25,5 +25,12 @@ namespace Identity.Infrastructure.Persistance.Repositories
         {
             return await GetAllAsync(trackChanges).ToListAsync();
         }
+
+        public async Task<IEnumerable<Country>> GetAllCountriesWithIncludedCitiesAsync(bool trackChanges)
+        {
+            return await GetAllAsync(trackChanges)
+                .Include(c => c.Cities)
+                .ToListAsync();
+        }
     }
 }

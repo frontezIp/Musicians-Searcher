@@ -25,6 +25,7 @@ namespace Identity.Application.Extensions
         private static void ConfigureServices(this IServiceCollection services) 
         { 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICountryService, CountryService>();
         }
 
         private static void ConfigureServiceValidators(this IServiceCollection services)
