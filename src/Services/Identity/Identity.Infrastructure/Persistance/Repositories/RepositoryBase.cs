@@ -8,7 +8,7 @@ namespace Identity.Infrastructure.Persistance.Repositories
     internal class RepositoryBase<T> : IRepositoryBase<T>
         where T : class
     {
-        protected IdentityContext Context { get; set; }
+        protected IdentityContext Context { get; init; }
 
         public RepositoryBase(IdentityContext context)
         {
