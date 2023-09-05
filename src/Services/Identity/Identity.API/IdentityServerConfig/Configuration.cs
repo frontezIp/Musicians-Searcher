@@ -15,10 +15,17 @@ namespace Identity.API.IdentityServerConfig
                 new IdentityResources.Profile()
             };
 
+        public static IEnumerable<ApiScope> GetApiScopes() =>
+            new List<ApiScope>
+            {
+                new ApiScope(ApiResourcesConstants.MUSICIANS_API_RESOURCE_NAME, "Full Access"),
+                new ApiScope(ApiResourcesConstants.CHAT_API_RESOURCE_NAME, "Full Access")
+            };
+
         public static IEnumerable<ApiResource> GetApis() =>
             new List<ApiResource> {
-                new ApiResource(ApiResourcesConstants.MUSICIANS_API_RESOURCE_NAME),
-                new ApiResource(ApiResourcesConstants.CHAT_API_RESOURCE_NAME)
+                new ApiResource(ApiResourcesConstants.MUSICIANS_API_RESOURCE_NAME) {Scopes = {ApiResourcesConstants.MUSICIANS_API_RESOURCE_NAME}},
+                new ApiResource(ApiResourcesConstants.CHAT_API_RESOURCE_NAME) {Scopes = {ApiResourcesConstants.CHAT_API_RESOURCE_NAME}}
             };
 
         public static IEnumerable<Client> GetClients() =>

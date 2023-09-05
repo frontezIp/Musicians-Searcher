@@ -74,11 +74,10 @@ namespace Identity.API.Extensions
                 .AddAspNetIdentity<User>()
                 .AddInMemoryIdentityResources(Configuration.GetIdentityResources())
                 .AddInMemoryApiResources(Configuration.GetApis())
+                .AddInMemoryApiScopes(Configuration.GetApiScopes())
                 .AddInMemoryClients(Configuration.GetClients())
                 .AddDeveloperSigningCredential()
                 .AddProfileService<ProfileService>();
         }
-
-
     }
 }
