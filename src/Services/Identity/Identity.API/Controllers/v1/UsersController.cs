@@ -16,16 +16,9 @@ namespace Identity.API.Controllers.v1
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IValidator<UserRequestDto> _validator;
 
-        private readonly ILogger<UsersController> _logger;
-
-        public UsersController(ILogger<UsersController> logger,
-            IUserService userService,
-            IValidator<UserRequestDto> validator)
+        public UsersController(IUserService userService)
         {
-            _logger = logger;
-            _validator = validator;
             _userService = userService;
         }
 
@@ -54,11 +47,8 @@ namespace Identity.API.Controllers.v1
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateUserAsync(UserRequestDto userForCreation)
+        public async Task<IActionResult> CreateUserAsync([FromBody]UserRequestDto userForCreation)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var createdUser = await _userService.CreateUserAsync(userForCreation);
 
             return CreatedAtRoute("UserById", new { userId = createdUser.Id }, createdUser);
