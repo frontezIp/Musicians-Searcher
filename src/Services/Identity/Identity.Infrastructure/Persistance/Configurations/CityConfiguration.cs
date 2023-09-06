@@ -22,8 +22,6 @@ namespace Identity.Infrastructure.Persistance.Configurations
             builder.HasOne(b => b.Country)
                 .WithMany(c => c.Cities)
                 .HasForeignKey(b => b.CountryId);
-
-
         }
     }
 }
