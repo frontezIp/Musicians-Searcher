@@ -1,17 +1,42 @@
+using Musicians.API.Extensions;
+using Musicians.API.Middlewares;
+using Musicians.Application.Extensions;
+using Musicians.Infrastructure.Extensions;
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
+builder.Services.ConfigureInfrastructure(builder.Configuration);
+builder.Services.ConfigureAPI(builder.Configuration);
+builder.Services.ConfigureApplication();
+builder.ConfigureLogger();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.ConfigureExceptionHandler(app.Logger);
+
+app.UseSerilogRequestLogging();
+
+
+if (app.Environment.IsProduction())
+    app.UseHsts();
+
+app.UseSwagger();
+app.UseSwaggerUI(s =>
+{
+    s.SwaggerEndpoint("/swagger/v1/swagger.json", "Musicians API v1");
+});
 
 app.UseHttpsRedirection();
 
+app.UseCors("CorsPolicy");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+await app.SeedAsync();
 
 app.Run();
