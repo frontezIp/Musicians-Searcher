@@ -13,26 +13,26 @@ namespace Musicians.Application.MediatoR.Features.Musicians.Queries.GetFilteredM
     {
         private readonly IMusiciansRepository _musicianRepository;
         private readonly IMapper _mapper;
-        private readonly IGenreServiceHelper _genreServiceValidator;
-        private readonly ISkillServiceHelper _skillServiceValidator;
+        private readonly IGenreServiceHelper _genreServiceHelper;
+        private readonly ISkillServiceHelper _skillServiceHelper;
 
         public GetFilteredMusiciansQueryHandler(IMusiciansRepository musicianRepository,
             IMapper mapper, 
-            IGenreServiceHelper genreServiceValidator,
-            ISkillServiceHelper skillServiceValidator)
+            IGenreServiceHelper genreServiceHelper,
+            ISkillServiceHelper skillServiceHelper)
         {
             _musicianRepository = musicianRepository;
             _mapper = mapper;
-            _genreServiceValidator = genreServiceValidator;
-            _skillServiceValidator = skillServiceValidator;
+            _genreServiceHelper = genreServiceHelper;
+            _skillServiceHelper = skillServiceHelper;
         }
 
         public async Task<(IEnumerable<MusicianResponseDto> musicians, MetaData metaData)> Handle(GetFilteredMusiciansQuery request, CancellationToken cancellationToken)
         {
             var musicianParameters = _mapper.Map<MusicianParameters>(request.GetFilteredMusiciansRequestDto);
 
-            await _genreServiceValidator.CheckIfGinresByGivenIdsExists(request.GetFilteredMusiciansRequestDto.GenresIds, cancellationToken);
-            await _skillServiceValidator.CheckSkillsByGivenIdsExists(request.GetFilteredMusiciansRequestDto.SkillsIds, cancellationToken);
+            await _genreServiceHelper.CheckIfGinresByGivenIdsExists(request.GetFilteredMusiciansRequestDto.GenresIds, cancellationToken);
+            await _skillServiceHelper.CheckSkillsByGivenIdsExists(request.GetFilteredMusiciansRequestDto.SkillsIds, cancellationToken);
 
             var pagedList = await _musicianRepository.GetFilteredMusiciansAsync(musicianParameters, cancellationToken);
 

@@ -12,23 +12,23 @@ namespace Musicians.Application.MediatoR.Features.Friends.Queries.GetAllFriendsB
     {
         private readonly IFriendsRepository _friendsRepository;
         private readonly IMapper _mapper;
-        private readonly IMusicianServiceHelper _musicianServiceValidator;
+        private readonly IMusicianServiceHelper _musicianServiceHelper;
         private readonly ILogger<GetAllFriendsByGivenMusicianIdQuery> _logger;
 
         public GetAllFriendsByGivenMusicianIdQueryHandler(IFriendsRepository friendsRepository,
             IMapper mapper,
-            IMusicianServiceHelper musicianServiceValidator,
+            IMusicianServiceHelper musicianServiceHelper,
             ILogger<GetAllFriendsByGivenMusicianIdQuery> logger)
         {
             _friendsRepository = friendsRepository;
             _mapper = mapper;
-            _musicianServiceValidator = musicianServiceValidator;
+            _musicianServiceHelper = musicianServiceHelper;
             _logger = logger;
         }
 
         public async Task<IEnumerable<MusicianResponseDto>> Handle(GetAllFriendsByGivenMusicianIdQuery request, CancellationToken cancellationToken)
         {
-            await _musicianServiceValidator.CheckIfMusicianExistsAsync(request.musicianId, cancellationToken);
+            await _musicianServiceHelper.CheckIfMusicianExistsAsync(request.musicianId, cancellationToken);
 
             var musicianFriends = await _friendsRepository.GetAllMusicianFriendsAsync(request.musicianId, cancellationToken);
 

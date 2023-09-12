@@ -10,26 +10,22 @@ namespace Musicians.Application.MediatoR.Features.Friends.Commands.AddFriend
     {
         private readonly ISubcribersRepository _subcribersRepository;
         private readonly IFriendsRepository _friendsRepository;
-        private readonly IMusicianServiceHelper _musicianServiceValidator;
-        private readonly ITransactionUnit _transactionUnit;
+        private readonly IMusicianServiceHelper _musicianServiceHelper;
 
         public AddFriendToMusicianCommandHandler(ISubcribersRepository subcribersRepository,
             IFriendsRepository friendsRepository,
-            IMusicianServiceHelper musicianServiceValidator,
-            ITransactionUnit transactionUnit)
+            IMusicianServiceHelper musicianServiceHelper)
         {
             _subcribersRepository = subcribersRepository;
             _friendsRepository = friendsRepository;
-            _musicianServiceValidator = musicianServiceValidator;
-            _transactionUnit = transactionUnit;
-
+            _musicianServiceHelper = musicianServiceHelper;
         }
 
         public async Task Handle(AddFriendToMusicianCommand request, CancellationToken cancellationToken)
         {
-            var musician = await _musicianServiceValidator.CheckIfMusicianExistsAndGetAsync(request.musicianId, cancellationToken);
+            var musician = await _musicianServiceHelper.CheckIfMusicianExistsAndGetAsync(request.musicianId, cancellationToken);
 
-            var musicianToAdd = await _musicianServiceValidator.CheckIfMusicianExistsAndGetAsync(request.musicianToAddId, cancellationToken);
+            var musicianToAdd = await _musicianServiceHelper.CheckIfMusicianExistsAndGetAsync(request.musicianToAddId, cancellationToken);
 
             if (await _friendsRepository.IsAlreadyFriendAsync(musician.Id, musicianToAdd.Id))
                 throw new MusicianIsAlreadyFriendException(musician.Id, musicianToAdd.Id);

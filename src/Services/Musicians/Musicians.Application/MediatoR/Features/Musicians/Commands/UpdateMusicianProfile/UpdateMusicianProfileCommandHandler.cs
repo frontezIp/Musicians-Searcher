@@ -12,28 +12,28 @@ namespace Musicians.Application.MediatoR.Features.Musicians.Commands.UpdateMusic
 
         private readonly IMusiciansRepository _musicianRepository;
         private readonly IMapper _mapper;
-        private readonly IMusicianServiceHelper _musicianServiceValidator;
-        private readonly IGenreServiceHelper _genreServiceValidator;
-        private readonly ISkillServiceHelper _skillServiceValidator;
+        private readonly IMusicianServiceHelper _musicianServiceHelper;
+        private readonly IGenreServiceHelper _genreServiceHelper;
+        private readonly ISkillServiceHelper _skillServiceHelper;
 
         public UpdateMusicianProfileCommandHandler(IMusiciansRepository musicianRepository,
-            IMusicianServiceHelper musicianServiceValidator,
+            IMusicianServiceHelper musicianServiceHelper,
             IMapper mapper,
-            IGenreServiceHelper genreServiceValidator,
-            ISkillServiceHelper skillServiceValidator)
+            IGenreServiceHelper genreServiceHelper,
+            ISkillServiceHelper skillServiceHelper)
         {
             _musicianRepository = musicianRepository;
-            _musicianServiceValidator = musicianServiceValidator;
+            _musicianServiceHelper = musicianServiceHelper;
             _mapper = mapper;
-            _genreServiceValidator = genreServiceValidator;
-            _skillServiceValidator = skillServiceValidator;
+            _genreServiceHelper = genreServiceHelper;
+            _skillServiceHelper = skillServiceHelper;
         }
 
         public async Task Handle(UpdateMusicianProfileCommand request, CancellationToken cancellationToken)
         {
-            await _musicianServiceValidator.CheckIfMusicianExistsAsync(request.musicianId, cancellationToken);
-            var genres =  await _genreServiceValidator.CheckIfGenresByGivenIdsExistsAndGet(request.MusicianProfileRequestDto.FavouriteGenresIds, cancellationToken);
-            var skills = await _skillServiceValidator.CheckIfSkillsByGivenIdsExistsAndGet(request.MusicianProfileRequestDto.SkillsIds, cancellationToken);
+            await _musicianServiceHelper.CheckIfMusicianExistsAsync(request.musicianId, cancellationToken);
+            var genres =  await _genreServiceHelper.CheckIfGenresByGivenIdsExistsAndGet(request.MusicianProfileRequestDto.FavouriteGenresIds, cancellationToken);
+            var skills = await _skillServiceHelper.CheckIfSkillsByGivenIdsExistsAndGet(request.MusicianProfileRequestDto.SkillsIds, cancellationToken);
 
             var musician = _mapper.Map<Musician>(request.MusicianProfileRequestDto);
 

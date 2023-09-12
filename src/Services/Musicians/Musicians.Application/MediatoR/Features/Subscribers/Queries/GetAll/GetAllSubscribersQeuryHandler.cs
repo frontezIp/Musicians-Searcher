@@ -11,24 +11,24 @@ namespace Musicians.Application.MediatoR.Features.Subscribers.Queries.GetAll
         : IRequestHandler<GetAllSubScribersQuery, IEnumerable<MusicianResponseDto>>
     {
         private readonly ISubcribersRepository _subscribersRepository;
-        private readonly IMusicianServiceHelper _musicianServiceValidator;
+        private readonly IMusicianServiceHelper _musicianServiceHelper;
         private readonly ILogger<GetAllSubscribersQeuryHandler> _logger;
         private readonly IMapper _mapper;
 
         public GetAllSubscribersQeuryHandler(ISubcribersRepository subscribersRepository,
-            IMusicianServiceHelper musicianServiceValidator,
+            IMusicianServiceHelper musicianServiceHelper,
             IMapper mapper,
             ILogger<GetAllSubscribersQeuryHandler> logger)
         {
             _subscribersRepository = subscribersRepository;
-            _musicianServiceValidator = musicianServiceValidator;
+            _musicianServiceHelper = musicianServiceHelper;
             _mapper = mapper;
             _logger = logger;
         }
 
         public async Task<IEnumerable<MusicianResponseDto>> Handle(GetAllSubScribersQuery request, CancellationToken cancellationToken)
         {
-            await _musicianServiceValidator.CheckIfMusicianExistsAsync(request.musicianId, cancellationToken);
+            await _musicianServiceHelper.CheckIfMusicianExistsAsync(request.musicianId, cancellationToken);
 
             var subscribers = await _subscribersRepository.GetAllMusicianSubscribersAsync(request.musicianId, cancellationToken);
 

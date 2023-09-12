@@ -16,7 +16,7 @@ namespace Musicians.Application.Extensions
         public static void ConfigureApplication(this IServiceCollection services)
         {
             services.ConfigureMappings();
-            services.ConfigureServiceValidators();
+            services.ConfigureServiceHelpers();
             services.ConfigureFluentValidators();
             services.ConfigureMediatr();
         }
@@ -44,7 +44,7 @@ namespace Musicians.Application.Extensions
             services.AddValidatorsFromAssembly(ValidatorsAssemblyReference.Assembly);
         }
 
-        private static void ConfigureServiceValidators(this IServiceCollection services)
+        private static void ConfigureServiceHelpers(this IServiceCollection services)
         {
             services.AddScoped<IMusicianServiceHelper, MusicianServiceHelper>();
             services.AddScoped<ISkillServiceHelper, SkillServiceHelper>();
