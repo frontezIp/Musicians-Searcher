@@ -5,14 +5,14 @@ using Musicians.Infrastructure.Persistance.Contexts;
 using Musicians.Domain.RequestParameters;
 using Musicians.Infrastructure.Persistance.Utilities.MusicianBuilders;
 using Musicians.Domain.RequestFeatures;
-using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 
 namespace Musicians.Infrastructure.Persistance.Repositories
 {
     internal class MusiciansRepository : 
         BaseRepository<Musician>, IMusiciansRepository
     {
-        public MusiciansRepository(MusiciansContext musiciansContext) : base(musiciansContext.GetMusicians)
+        public MusiciansRepository(MusiciansContext musiciansContext) : base(musiciansContext.GetCollection<Musician>())
         {
         }
 
@@ -26,26 +26,17 @@ namespace Musicians.Infrastructure.Persistance.Repositories
             var skip = (parameters.PageNumber - 1) * parameters.PageSize;
             var take = parameters.PageSize;
 
-            var pipeline = new IPipelineStageDefinition[]
-            {
-                new BsonDocumentPipelineStageDefinition<Musician, Musician>(
-                    new BsonDocument("$match", MusicianFiltersBuilder.BuildFilter(parameters).Render(_collection.DocumentSerializer, _collection.Settings.SerializerRegistry))),
-                new BsonDocumentPipelineStageDefinition<Musician, Musician>(MusicianAddIntersectionCountFieldsBuilder.AddFields(parameters)),
-                new BsonDocumentPipelineStageDefinition<Musician,Musician>(
-                    new BsonDocument("$sort", new BsonDocument
-                    {
-                        { "SkillsIntersectionCount", -1 },
-                        { "GenresIntersectionCount", -1 }
-                    })),
-                new BsonDocumentPipelineStageDefinition<Musician, Musician>(
-                    new BsonDocument("$project", MusicianProjectionBuilder.BuildProjection().Render(_collection.DocumentSerializer, _collection.Settings.SerializerRegistry))),
-                new BsonDocumentPipelineStageDefinition<Musician, Musician>(
-                    new BsonDocument("$skip", skip)),
-                new BsonDocumentPipelineStageDefinition<Musician,Musician>(
-                    new BsonDocument("$limit", take))
-            };
+            var pipeline = await _collection
+                .Aggregate()
+                .Match(MusicianFiltersBuilder.BuildFilter(parameters))
+                .AppendStage<Musician>(MusicianAddIntersectionCountFieldsBuilder.AddFields(parameters))
+                .Sort(MusicianSortBuilder.BuildSort(parameters))
+                .Project(MusicianProjectionBuilder.BuildProjection())
+                .Skip(skip)
+                .Limit(take)
+                .ToListAsync(cancellationToken);
 
-            var res = await _collection.Aggregate<Musician>(pipeline).ToListAsync(cancellationToken);
+            var res = pipeline.Select(doc => BsonSerializer.Deserialize<Musician>(doc)).ToList();
 
             return new PagedList<Musician>(res, res.Count,
                 parameters.PageNumber, parameters.PageSize);
