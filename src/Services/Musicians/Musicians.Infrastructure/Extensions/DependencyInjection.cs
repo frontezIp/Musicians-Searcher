@@ -15,16 +15,9 @@ namespace Musicians.Infrastructure.Extensions
     {
         public static void ConfigureInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.ConfigureOptions(configuration);
             services.ConfigureMongo(configuration);
             services.ConfigureRepositories();
             services.ConfigureContext();
-            services.ConfigureTransactionUnit();
-        }
-
-        private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<CollectionsNamesOptions>(configuration.GetSection(nameof(CollectionsNamesOptions)));
         }
 
         private static void ConfigureMongo(this IServiceCollection services, IConfiguration configuration)
@@ -37,11 +30,6 @@ namespace Musicians.Infrastructure.Extensions
                 var mongoClient = new MongoClient(mongoDbSettings!.ConnectionString);
                 return mongoClient.GetDatabase(mongoDbSettings.Database);
             });
-        }
-
-        private static void ConfigureTransactionUnit(this IServiceCollection services)
-        {
-            services.AddScoped<ITransactionUnit, TransactionUnit>();
         }
 
         private static void ConfigureContext(this IServiceCollection services)

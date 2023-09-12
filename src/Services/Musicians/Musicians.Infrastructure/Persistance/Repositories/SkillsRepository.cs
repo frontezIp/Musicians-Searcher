@@ -7,7 +7,7 @@ namespace Musicians.Infrastructure.Persistance.Repositories
     internal class SkillsRepository :
         BaseRepository<Skill>, ISkillsRepository
     {
-        public SkillsRepository(MusiciansContext musiciansContext) : base(musiciansContext.GetSkills)
+        public SkillsRepository(MusiciansContext musiciansContext) : base(musiciansContext.GetCollection<Skill>())
         {
         }
     }

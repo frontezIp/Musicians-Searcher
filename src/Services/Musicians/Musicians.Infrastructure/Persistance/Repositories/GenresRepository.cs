@@ -7,7 +7,7 @@ namespace Musicians.Infrastructure.Persistance.Repositories
     internal class GenresRepository :
         BaseRepository<Genre>, IGenresRepository
     {
-        public GenresRepository(MusiciansContext musiciansContext) : base(musiciansContext.GetGenres)
+        public GenresRepository(MusiciansContext musiciansContext) : base(musiciansContext.GetCollection<Genre>())
         {
         }
     }

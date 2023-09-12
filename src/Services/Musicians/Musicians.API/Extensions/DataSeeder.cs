@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
-using Musicians.Application.Interfaces.Persistance;
+using Musicians.Domain.Models;
+using Musicians.Infrastructure.Models;
 using Musicians.Infrastructure.Persistance.Contexts;
 using Musicians.Infrastructure.Seed;
 
@@ -13,18 +14,14 @@ namespace Musicians.API.Extensions
             {
                 var context = scope.ServiceProvider.GetRequiredService<MusiciansContext>();
 
-                var genresRepository = scope.ServiceProvider.GetRequiredService<IGenresRepository>();
+                if (!context.GetCollection<Genre>().AsQueryable().Any())
+                    await context.GetCollection<Genre>().InsertManyAsync(DataToSeed.GetGenres());
 
-                var skillsRepository = scope.ServiceProvider.GetRequiredService<ISkillsRepository>();
+                if (!context.GetCollection<Skill>().AsQueryable().Any())
+                    await context.GetCollection<Skill>().InsertManyAsync(DataToSeed.GetSkills());
 
-                if (!context.GetGenres.AsQueryable().Any())
-                    await context.GetGenres.InsertManyAsync(DataToSeed.GetGenres());
-
-                if (!context.GetSkills.AsQueryable().Any())
-                    await context.GetSkills.InsertManyAsync(DataToSeed.GetSkills());
-
-                if (!context.GetMusicians.AsQueryable().Any())
-                    await context.GetMusicians.InsertManyAsync(DataToSeed.GetMusicians());
+                if (!context.GetCollection<Musician>().AsQueryable().Any())
+                    await context.GetCollection<Musician>().InsertManyAsync(DataToSeed.GetMusicians());
             }
         }
     }

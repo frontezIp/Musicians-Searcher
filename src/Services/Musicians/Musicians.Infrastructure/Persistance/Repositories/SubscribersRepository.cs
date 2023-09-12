@@ -8,7 +8,7 @@ namespace Musicians.Infrastructure.Persistance.Repositories
     public class SubscribersRepository :
         BaseRepository<Musician>, ISubcribersRepository
     {
-        public SubscribersRepository(MusiciansContext context) : base(context.GetMusicians)
+        public SubscribersRepository(MusiciansContext context) : base(context.GetCollection<Musician>())
         {
         }
 
