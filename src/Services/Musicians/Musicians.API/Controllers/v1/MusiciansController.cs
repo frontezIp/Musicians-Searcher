@@ -48,7 +48,7 @@ namespace Musicians.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> CurrentMusicianProfile(Guid musicianId, UpdateMusicianProfileRequestDto updateMusicianProfileRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CurrentMusicianProfile(Guid musicianId, [FromBody]UpdateMusicianProfileRequestDto updateMusicianProfileRequestDto, CancellationToken cancellationToken)
         {
             var query = new UpdateMusicianProfileCommand(updateMusicianProfileRequestDto, musicianId);
 
