@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Chat.DataAccess.Configurations
 {
-    internal class MessangerUserConfiguration : IEntityTypeConfiguration<MessengerUser>
+    internal class MessengerUserConfiguration : IEntityTypeConfiguration<MessengerUser>
     {
         public void Configure(EntityTypeBuilder<MessengerUser> builder)
         {
@@ -14,6 +14,10 @@ namespace Chat.DataAccess.Configurations
                 .ValueGeneratedOnAdd();
 
             builder.Property(b => b.FullName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            builder.Property(b => b.Username)
                 .IsRequired()
                 .HasMaxLength(100);
         }

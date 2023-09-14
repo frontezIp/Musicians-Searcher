@@ -26,10 +26,12 @@ namespace Chat.DataAccess.Configurations
                 .HasConversion(new DateOnlyToDateTimeConverter())
                 .HasDefaultValueSql("getdate()");
 
-            builder.HasOne(b => b.Creater)
+            builder.HasOne(b => b.Creator)
                 .WithMany(b => b.CreatedChatRooms)
-                .HasForeignKey(b => b.CreaterId);
+                .HasForeignKey(b => b.CreatorId);
 
+            builder.Property(b => b.LastSentMessageAt)
+                .HasDefaultValueSql("GETDATE()");
         }
     }
 }
