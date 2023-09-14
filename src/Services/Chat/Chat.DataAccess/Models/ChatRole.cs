@@ -1,9 +1,7 @@
 ﻿namespace Chat.DataAccess.Models
 {
-    public class ChatRole
+    public class ChatRole : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public string Name { get; set; } = null!;
     }
 }
