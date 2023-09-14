@@ -6,10 +6,10 @@ using Shared.Enums;
 namespace Musicians.Infrastructure.Models
 {
     [Serializable, BsonIgnoreExtraElements]
-    public class Musician
+    public class Musician : BaseEntity
     {
-        [BsonId, BsonElement("_id"), BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; } = null!;
+        [BsonElement("username"), BsonRepresentation(MongoDB.Bson.BsonType.String)]
+        public string Username { get; set; }  = string.Empty;
 
         [BsonElement("full_name"), BsonRepresentation(MongoDB.Bson.BsonType.String)]
         public string FullName { get; set; } = null!;
@@ -35,17 +35,21 @@ namespace Musicians.Infrastructure.Models
 
         [BsonElement("created_at"), BsonRepresentation(MongoDB.Bson.BsonType.DateTime)]
         public DateTime CreatedAt { get; set; }
+        [BsonElement("subscribers_count"), BsonRepresentation(MongoDB.Bson.BsonType.Int32)]
+        public int SubscribersCount { get; set; }
+        [BsonElement("friends_count"), BsonRepresentation(MongoDB.Bson.BsonType.Int32)]
+        public int FriendsCount { get; set; }
 
         [BsonElement("subscribers")]
-        public List<Musician> Subscribers { get; set; } = new();
+        public List<Guid> Subscribers { get; set; } = new();
 
         [BsonElement("friends")]
-        public List<Musician> Friends { get; set; } = new();
+        public List<Guid> Friends { get; set; } = new();
 
         [BsonElement("favourite_genres")]
         public List<Genre> FavouriteGenres { get; set; } = new();
 
         [BsonElement("skills")]
-        public List<Genre> Skills { get; set; } = new();
+        public List<Skill> Skills { get; set; } = new();
     }
 }
