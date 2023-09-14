@@ -4,6 +4,7 @@ using Chat.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chat.DataAccess.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    partial class ChatContextModelSnapshot : ModelSnapshot
+    [Migration("20230909123232_AddIndexesAndConstraints")]
+    partial class AddIndexesAndConstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,7 +59,7 @@ namespace Chat.DataAccess.Migrations
                     b.HasIndex("MessengerUserId", "ChatRoomId")
                         .IsUnique();
 
-                    b.ToTable("ChatParticipants", (string)null);
+                    b.ToTable("ChatParticipants");
                 });
 
             modelBuilder.Entity("Chat.DataAccess.Models.ChatRole", b =>
@@ -71,7 +74,7 @@ namespace Chat.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ChatRoles", (string)null);
+                    b.ToTable("ChatRoles");
                 });
 
             modelBuilder.Entity("Chat.DataAccess.Models.ChatRoom", b =>
@@ -90,8 +93,7 @@ namespace Chat.DataAccess.Migrations
 
                     b.Property<DateTime>("LastSentMessageAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("MembersNumber")
                         .HasColumnType("int");
@@ -113,7 +115,7 @@ namespace Chat.DataAccess.Migrations
 
                     b.HasIndex("CreatorId");
 
-                    b.ToTable("ChatRooms", (string)null);
+                    b.ToTable("ChatRooms");
                 });
 
             modelBuilder.Entity("Chat.DataAccess.Models.Message", b =>
@@ -149,7 +151,7 @@ namespace Chat.DataAccess.Migrations
 
                     b.HasIndex("MessengerUserId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Chat.DataAccess.Models.MessengerUser", b =>
@@ -173,7 +175,7 @@ namespace Chat.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MessangerUsers", (string)null);
+                    b.ToTable("MessangerUsers");
                 });
 
             modelBuilder.Entity("Chat.DataAccess.Models.ChatParticipant", b =>
