@@ -60,7 +60,7 @@ namespace Chat.BusinessLogic.Services.Implementations
 
             var chatParticipants = await _chatParticipantRepository.GetBySpecificationAsync(spec, cancellationToken);
             chatParticipants = chatParticipants.ToList();
-            var count = await _chatParticipantRepository.CountBySpecificationAsync(spec, cancellationToken);
+            var count = chatParticipants.Count();
 
             var metadata = chatParticipants.GetMetaData(count, getFilteredChatParticipantsRequestDTO.PageNumber, getFilteredChatParticipantsRequestDTO.PageSize);
 

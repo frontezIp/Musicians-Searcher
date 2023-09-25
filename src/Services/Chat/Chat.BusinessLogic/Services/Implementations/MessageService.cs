@@ -1,5 +1,4 @@
 ﻿using Chat.BusinessLogic.DTOs.RequestDTOs.MessageRequestsDTOs;
-using Chat.BusinessLogic.DTOs.ResponseDTOs;
 using Chat.BusinessLogic.Helpers.Interfaces;
 using Chat.BusinessLogic.Services.Interfaces;
 using Chat.DataAccess.Models;
@@ -45,7 +44,7 @@ namespace Chat.BusinessLogic.Services.Implementations
 
         public async Task CreateMessageAsync(Guid messengerUserId, Guid chatRoomId, CreateMessageRequestDto createMessageRequestDto, CancellationToken cancellationToken = default)
         {
-            var messengerUser = await _messengerUserServiceHelper.CheckIfMessengerUserExistsAndGetAsync(messengerUserId, false, cancellationToken);
+            await _messengerUserServiceHelper.CheckIfMessengerUserExistsAsync(messengerUserId, cancellationToken);
             var chatRoom = await _chatRoomServiceHelper.CheckIfChatRoomExistsAndGetByIdAsync(chatRoomId, true, cancellationToken);
             await _chatParticipantServiceHelper.CheckIfChatParticipantExistsByGivenMessengerUserAndChatRoomIdAsync(messengerUserId, chatRoomId, cancellationToken);
 
@@ -116,7 +115,7 @@ namespace Chat.BusinessLogic.Services.Implementations
         {
             await _messengerUserServiceHelper.CheckIfMessengerUserExistsAsync(messengerUserId, cancellationToken);
             await _chatRoomServiceHelper.CheckIfChatRoomExistsAsync(chatRoomId, cancellationToken);
-            var chatParticipant = await _chatParticipantServiceHelper.CheckIfChatParticipantExistsByGivenMessengerUserAndChatRoomIdAndGetAsync(messengerUserId, chatRoomId, false, cancellationToken);
+            await _chatParticipantServiceHelper.CheckIfChatParticipantExistsByGivenMessengerUserAndChatRoomIdAsync(messengerUserId, chatRoomId, cancellationToken);
             var message = await _messageServiceHelper.CheckIfMessageExistsByIdAndGetAsync(messageId, true, cancellationToken);
 
             if (message.MessengerUserId != messengerUserId) 

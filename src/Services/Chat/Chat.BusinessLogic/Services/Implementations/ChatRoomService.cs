@@ -62,7 +62,7 @@ namespace Chat.BusinessLogic.Services.Implementations
 
             var chatRooms = await _chatRoomRepository.GetBySpecificationAsync(spec, cancellationToken);
             var chatRoomsDtos = _mapper.Map<IEnumerable<ChatRoomResponseDto>>(chatRooms);
-            var count = await _chatRoomRepository.CountBySpecificationAsync(spec, cancellationToken);
+            var count = chatRooms.Count();
 
             var metadata = chatRooms.GetMetaData(count, paginatedUserChatRoomsRequestDto.PageNumber, paginatedUserChatRoomsRequestDto.PageSize);
 
