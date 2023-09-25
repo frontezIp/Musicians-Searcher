@@ -16,7 +16,7 @@ namespace Chat.DataAccess.Contexts
 
         public DbSet<Message> Messages { get; set; }
 
-        public DbSet<MessangerUser> MessangerUsers { get; set; }
+        public DbSet<MessengerUser> MessangerUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

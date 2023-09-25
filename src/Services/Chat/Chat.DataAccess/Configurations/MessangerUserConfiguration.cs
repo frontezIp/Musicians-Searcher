@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Chat.DataAccess.Configurations
 {
-    internal class MessangerUserConfiguration : IEntityTypeConfiguration<MessangerUser>
+    internal class MessangerUserConfiguration : IEntityTypeConfiguration<MessengerUser>
     {
-        public void Configure(EntityTypeBuilder<MessangerUser> builder)
+        public void Configure(EntityTypeBuilder<MessengerUser> builder)
         {
             builder.HasKey(b => b.Id);
 

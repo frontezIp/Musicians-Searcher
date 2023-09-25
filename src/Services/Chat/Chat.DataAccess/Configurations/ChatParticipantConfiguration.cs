@@ -26,10 +26,12 @@ namespace Chat.DataAccess.Configurations
                 .HasConversion(new DateOnlyToDateTimeConverter())
                 .HasDefaultValueSql("getdate()");
 
-            builder.HasOne(b => b.MessangerUser)
+            builder.HasOne(b => b.MessengerUser)
                 .WithMany(b => b.ParticipatedChats)
-                .HasForeignKey(b => b.MessangerUserId)
+                .HasForeignKey(b => b.MessengerUserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasIndex(cp => new { cp.MessengerUserId, cp.ChatRoomId }).IsUnique();
 
             builder.HasOne(b => b.ChatRole);
         }

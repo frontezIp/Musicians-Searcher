@@ -27,9 +27,9 @@ namespace Chat.DataAccess.Configurations
                 .WithMany(b => b.Messages)
                 .HasForeignKey(b => b.ChatRoomId);
 
-            builder.HasOne(b => b.MessangerUser)
+            builder.HasOne(b => b.MessengerUser)
                 .WithMany(b => b.Messages)
-                .HasForeignKey(b => b.MessangerUserId)
+                .HasForeignKey(b => b.MessengerUserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
         }

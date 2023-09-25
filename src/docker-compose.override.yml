@@ -6,9 +6,11 @@ services:
           - 1433:1433
         environment:
           - ACCEPT_EULA=Y
-          - MSSQL_SA_PASSWORD=passw0rd
+          - MSSQL_SA_PASSWORD=Passw0rd1234
+        restart: unless-stopped
 
     postgres:
+        restart: unless-stopped
         ports:
             - 5432:5432   
         environment:
@@ -17,6 +19,7 @@ services:
             - POSTGRES_DB=identity
      
     mongo:
+        restart: unless-stopped
         ports:
             - 27017:27017
         environment:
@@ -24,6 +27,7 @@ services:
             - MONGO_INITDB_ROOT_PASSWORD:password
 
     mongo-express:
+        restart: unless-stopped
         ports:
             - 8081:8081
         environment: 
@@ -35,15 +39,18 @@ services:
             - 1000:80
         environment:
             - ASPNETCORE_ENVIRONMENT=Docker 
+        restart: unless-stopped
 
     chat:
         ports:
-            - 2000:80
+            - 3000:80
         environment:
             - ASPNETCORE_ENVIRONMENT=Docker 
+        restart: unless-stopped
     
     musicians:
         ports:
-            - 3000:80 
+            - 2000:80 
         environment:
             - ASPNETCORE_ENVIRONMENT=Docker
+        restart: unless-stopped
