@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chat.API.Controllers.v1
 {
-    [Route("api/{v:apiversion}/MessengerUsers/{messengerUserId}/[controller]")]
+    [Route("api/{v:apiversion}/messenger-users/{messengerUserId}/[controller]")]
     public class ChatRoomsController : BaseApiController
     {
         private readonly IChatRoomService _chatRoomsService;

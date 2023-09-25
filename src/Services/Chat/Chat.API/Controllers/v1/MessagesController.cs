@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chat.API.Controllers.v1
 {
-    [Route("api/{v:apiversion}/MessengerUsers/{messengerUserId}/ChatRooms/{chatRoomId}/[controller]")]
+    [Route("api/{v:apiversion}/messenger-users/{messengerUserId}/chat-rooms/{chatRoomId}/[controller]")]
     public class MessagesController : BaseApiController
     {
         private readonly IMessageService _messageService;
