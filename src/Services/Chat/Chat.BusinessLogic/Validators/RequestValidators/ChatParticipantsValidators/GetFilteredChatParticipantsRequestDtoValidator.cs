@@ -7,6 +7,7 @@ namespace Chat.BusinessLogic.Validators.RequestValidators.ChatParticipantsValida
     {
         public GetFilteredChatParticipantsRequestDtoValidator()
         {
+            Include(new RequestParametersDtoValidator());   
         }
     }
 }
