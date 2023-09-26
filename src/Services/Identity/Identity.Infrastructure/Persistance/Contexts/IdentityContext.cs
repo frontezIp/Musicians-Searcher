@@ -2,6 +2,7 @@
 using Identity.Infrastructure.Persistance.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Shared.Messages;
 
 namespace Identity.Infrastructure.Persistance.Contexts
 {
@@ -9,9 +10,9 @@ namespace Identity.Infrastructure.Persistance.Contexts
     {
         public IdentityContext(DbContextOptions options) : base(options) { }
 
-
         public DbSet<City> Cities { get; set; } = null!;
         public DbSet<Country> Countries { get; set; } = null!;
+        public DbSet<OutboxMessage> OutboxMessages { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
