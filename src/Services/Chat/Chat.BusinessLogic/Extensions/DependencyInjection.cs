@@ -17,7 +17,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Shared.Messages.IdentityMessages;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Chat.BusinessLogic.Options;
 
 namespace Chat.BusinessLogic.Extensions
 {
@@ -48,16 +47,6 @@ namespace Chat.BusinessLogic.Extensions
             services.AddScoped<IConsumerHandler<string, UserCreatedMessage>, UserCreatedMessageHandler>();
         }
 
-        private static void ConfigureGrpcClient(this IServiceCollection services)
-        {
-            services.AddScoped<ErrorInterceptor>();
-            services.AddScoped<IMusicianClient, MusicianClient>();
-            services.AddGrpcClient<Musician.MusicianClient>((p, o) =>
-            {
-                var grpcConfig = p.GetRequiredService<IOptions<GrpcConfigOptions>>();
-                o.Address = new Uri(grpcConfig.Value.MusicianUrl);
-            }).AddInterceptor<ErrorInterceptor>();
-        }
         private static void ConfigureMessageOutboxConsumers(this IServiceCollection services, IConfiguration configuration)
         {
             var topicOptions = new KafkaTopicOptions();
@@ -81,7 +70,6 @@ namespace Chat.BusinessLogic.Extensions
             services.AddScoped<IChatRoomService, ChatRoomService>();    
             services.AddScoped<IChatRoleService, ChatRoleService>();    
             services.AddScoped<IMessageService, MessageService>();  
-            services.AddScoped<IMessengerUserService, MessengerUserService>();
         }
 
         private static void ConfigureServiceHelpers(this IServiceCollection services)
@@ -120,8 +108,6 @@ namespace Chat.BusinessLogic.Extensions
             services.Configure<ChatRolesOptions>(configuration.GetSection(nameof(ChatRolesOptions)));
             services.Configure<ConsumerConfig>(configuration.GetSection(nameof(ConsumerConfig)));
             services.Configure<KafkaTopicOptions>(configuration.GetSection(nameof(KafkaTopicOptions)));
-            services.Configure<GrpcConfigOptions>(configuration.GetSection(nameof(GrpcConfigOptions))); 
-            services.Configure<HangfireOptions>(configuration.GetSection(nameof(HangfireOptions)));
         }
 
         private static void ConfigureFluentValidators(this IServiceCollection services)
