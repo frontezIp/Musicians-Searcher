@@ -1,6 +1,6 @@
-﻿using Musicians.Domain.RequestFeatures;
+﻿using Musicians.Domain.Models;
+using Musicians.Domain.RequestFeatures;
 using Musicians.Domain.RequestParameters;
-using Musicians.Infrastructure.Models;
 
 namespace Musicians.Application.Interfaces.Persistance
 {

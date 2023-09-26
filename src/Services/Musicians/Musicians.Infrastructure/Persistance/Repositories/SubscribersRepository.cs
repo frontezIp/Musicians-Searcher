@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 using Musicians.Application.Interfaces.Persistance;
-using Musicians.Infrastructure.Models;
+using Musicians.Domain.Models;
 using Musicians.Infrastructure.Persistance.Contexts;
 
 namespace Musicians.Infrastructure.Persistance.Repositories

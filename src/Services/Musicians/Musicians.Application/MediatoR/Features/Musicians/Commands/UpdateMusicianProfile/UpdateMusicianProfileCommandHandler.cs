@@ -2,7 +2,7 @@
 using MediatR;
 using Musicians.Application.Interfaces.Persistance;
 using Musicians.Application.Interfaces.ServiceHelpers;
-using Musicians.Infrastructure.Models;
+using Musicians.Domain.Models;
 
 namespace Musicians.Application.MediatoR.Features.Musicians.Commands.UpdateMusicianProfile
 {

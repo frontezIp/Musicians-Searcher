@@ -1,9 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
-using Musicians.Domain.Models;
 using Shared.Enums;
 
-namespace Musicians.Infrastructure.Models
+namespace Musicians.Domain.Models
 {
     [Serializable, BsonIgnoreExtraElements]
     public class Musician : BaseEntity
@@ -25,7 +24,7 @@ namespace Musicians.Infrastructure.Models
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         [BsonElement("sex"), BsonRepresentation(MongoDB.Bson.BsonType.String)]
-        public SexTypes Sex { get; set; }
+        public SexTypes SexTypeId { get; set; }
 
         [BsonElement("goal"), BsonRepresentation(MongoDB.Bson.BsonType.String)]
         public string Goal { get; set; } = string.Empty;

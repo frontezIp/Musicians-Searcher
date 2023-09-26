@@ -1,6 +1,5 @@
 ﻿using MongoDB.Driver;
 using Musicians.Domain.Models;
-using Musicians.Infrastructure.Models;
 using Musicians.Infrastructure.Persistance.Contexts;
 using Musicians.Infrastructure.Seed;
 

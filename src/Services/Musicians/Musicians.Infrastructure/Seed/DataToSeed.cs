@@ -1,5 +1,4 @@
 ﻿using Musicians.Domain.Models;
-using Musicians.Infrastructure.Models;
 
 namespace Musicians.Infrastructure.Seed
 {
@@ -50,7 +49,7 @@ namespace Musicians.Infrastructure.Seed
                     Goal = "Trying to find some good singers",
                     Id = new Guid("61482e7a-0d75-45a4-8bf9-09ca281ec83f"),
                     Location = "Kazakhstan, Astana",
-                    Sex = Shared.Enums.SexTypes.Female,
+                    SexTypeId = Shared.Enums.SexTypes.Female,
                     Skills =  new List<Skill>(){GetSkills().ToList()[1]},
                     Username = "Unox103"
                 },
@@ -66,7 +65,7 @@ namespace Musicians.Infrastructure.Seed
                     Goal = "Trying to find some good musicians",
                     Id = new Guid("da6c2ddc-4265-4580-a0e9-e696f2df573c"),
                     Location = "Belarus, Gomel",
-                    Sex = Shared.Enums.SexTypes.Male,
+                    SexTypeId = Shared.Enums.SexTypes.Male,
                     Skills = GetSkills().ToList(),
                     Username = "Unox404"
                 },
@@ -82,7 +81,7 @@ namespace Musicians.Infrastructure.Seed
                     Goal = "Trying to find some good artists",
                     Id = new Guid("fd6ebca2-d3a2-4779-8022-6010d648e367"),
                     Location = "Belarus, Gomel",
-                    Sex = Shared.Enums.SexTypes.Male,
+                    SexTypeId = Shared.Enums.SexTypes.Male,
                     Skills = new List<Skill>(){GetSkills().ToList()[0]},
                     Username = "Maxim123"
                 },
@@ -99,7 +98,7 @@ namespace Musicians.Infrastructure.Seed
                     Goal = "Trying to find some good singers",
                     Id = new Guid("504892f8-e78c-417a-98c8-5c5e49c813c7"),
                     Location = "Belarus, Minsk",
-                    Sex = Shared.Enums.SexTypes.Female,
+                    SexTypeId = Shared.Enums.SexTypes.Female,
                     Skills =  new List<Skill>(){GetSkills().ToList()[1]},
                     Username = "Unox404"
                 },                               
