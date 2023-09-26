@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.ConfigureAPI(builder.Configuration);
 builder.Services.ConfigureInfrastructure(builder.Configuration);
-builder.Services.ConfigureApplication();
+builder.Services.ConfigureApplication(builder.Configuration);
 builder.ConfigureLogger();
 
 var app = builder.Build();
