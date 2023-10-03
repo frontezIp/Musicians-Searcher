@@ -13,7 +13,7 @@ namespace Identity.Infrastructure.MessageBroker.TranscationalOutbox
             _context = context;
         }
 
-        public async Task Create(OutboxMessage message)
+        public async Task CreateAsync(OutboxMessage message)
         {
             await _context.AddAsync(message);
         }

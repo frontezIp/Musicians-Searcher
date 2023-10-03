@@ -31,7 +31,7 @@ namespace Identity.Infrastructure.MessageBroker.Producers
                 Topic = topic
             };
 
-            await _outboxMessageRepository.Create(outboxMessage);
+            await _outboxMessageRepository.CreateAsync(outboxMessage);
         }
     }
 }
