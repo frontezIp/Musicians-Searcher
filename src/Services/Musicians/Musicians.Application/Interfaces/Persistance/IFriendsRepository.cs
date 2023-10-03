@@ -1,5 +1,4 @@
-﻿using Musicians.Infrastructure.Models;
-
+﻿using Musicians.Domain.Models;
 namespace Musicians.Application.Interfaces.Persistance
 {
     public interface IFriendsRepository

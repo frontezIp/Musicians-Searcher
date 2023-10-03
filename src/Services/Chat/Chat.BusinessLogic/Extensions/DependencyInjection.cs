@@ -15,6 +15,8 @@ using MapsterMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Messages.IdentityMessages;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Chat.BusinessLogic.Extensions
 {
@@ -27,6 +29,8 @@ namespace Chat.BusinessLogic.Extensions
             services.ConfigureServiceHelpers();
             services.ConfigureServices();
             services.ConfigureOptions(configuration);
+            services.ConfigureMessageHandlers();
+            services.ConfigureMessageOutboxConsumers(configuration);
         }
 
         private static void AddMappings(this IServiceCollection services)
@@ -35,6 +39,29 @@ namespace Chat.BusinessLogic.Extensions
             config.Scan(BusinessLogicAssemblyReference.Assembly);
             services.AddSingleton(config);
             services.AddScoped<IMapper, ServiceMapper>();
+        }
+
+        private static void ConfigureMessageHandlers(this IServiceCollection services)
+        {
+            services.AddScoped<IOutboxMessageHandler<string>, OutboxMessageHandler<string>>();
+            services.AddScoped<IConsumerHandler<string, UserCreatedMessage>, UserCreatedMessageHandler>();
+        }
+
+        private static void ConfigureMessageOutboxConsumers(this IServiceCollection services, IConfiguration configuration)
+        {
+            var topicOptions = new KafkaTopicOptions();
+            configuration.GetSection(nameof(KafkaTopicOptions)).Bind(topicOptions);
+
+            services.AddHostedService<OutboxMessagesBackgroundConsumer<string>>(provider =>
+            {
+                var logger = provider.GetRequiredService<ILogger<OutboxMessagesBackgroundConsumer<string>>>();
+                var consumerConfig = provider.GetRequiredService<IOptions<ConsumerConfig>>();
+                return new OutboxMessagesBackgroundConsumer<string>(
+                    topicOptions.IdentityTopic,
+                    provider,
+                    consumerConfig,
+                    logger);
+            });
         }
 
         private static void ConfigureServices(this IServiceCollection services)
@@ -54,9 +81,33 @@ namespace Chat.BusinessLogic.Extensions
             services.AddScoped<IChatRoleServiceHelper, ChatRoleServiceHelper>();
         }
 
+        private static void ConfigureConsumers(this IServiceCollection services, IConfiguration configuration)
+        {
+            var topicOptions = new KafkaTopicOptions();
+            configuration.GetSection(nameof(KafkaTopicOptions)).Bind(topicOptions);
+            services.AddKafkaConsumer<string, UserCreatedMessage, UserCreatedMessageHandler>(o =>
+            {
+                o.Topic = topicOptions.IdentityTopic;
+            });
+        }
+
+        private static void AddKafkaConsumer<Tk, Tv, THandler>(this IServiceCollection services,
+            Action<KafkaTopicSelectionOption<Tk, Tv>> configAction)
+            where Tv : class
+            where THandler : class, IConsumerHandler<Tk, Tv>
+        {
+            services.AddScoped<IConsumerHandler<Tk, Tv>, THandler>();
+
+            services.AddHostedService<MessagesBackgroundConsumer<Tk, Tv>>();
+
+            services.Configure(configAction);
+        }
+
         private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<ChatRolesOptions>(configuration.GetSection(nameof(ChatRolesOptions)));
+            services.Configure<ConsumerConfig>(configuration.GetSection(nameof(ConsumerConfig)));
+            services.Configure<KafkaTopicOptions>(configuration.GetSection(nameof(KafkaTopicOptions)));
         }
 
         private static void ConfigureFluentValidators(this IServiceCollection services)

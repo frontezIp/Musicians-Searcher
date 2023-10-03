@@ -1,7 +1,7 @@
 ﻿using Musicians.Application.Interfaces.Persistance;
-using Musicians.Infrastructure.Models;
 using Musicians.Domain.Exceptions.NotFoundException;
 using Musicians.Application.Interfaces.ServiceHelpers;
+using Musicians.Domain.Models;
 
 namespace Musicians.Application.ServiceHelpers
 {

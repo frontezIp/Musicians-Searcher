@@ -1,5 +1,5 @@
 ﻿using MongoDB.Driver;
-using Musicians.Infrastructure.Models;
+using Musicians.Domain.Models;
 using Musicians.Domain.RequestParameters;
 using Shared.Enums;
 
@@ -63,7 +63,7 @@ namespace Musicians.Infrastructure.Persistance.Utilities.MusicianBuilders
         private static FilterDefinition<Musician> BuildSexTypeFilter(FilterDefinitionBuilder<Musician> builder, MusicianParameters musicianParameters)
         {
             return Enum.IsDefined(typeof(SexTypes), musicianParameters.SexType) ?
-                builder.Where(musician => musician.Sex.Equals(musicianParameters.SexType)) :
+                builder.Where(musician => musician.SexTypeId.Equals(musicianParameters.SexType)) :
                 builder.Empty;
         }
     }

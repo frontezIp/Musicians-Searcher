@@ -16,7 +16,7 @@ namespace Identity.Application.Validators.ServiceHelpers
 
         public async Task<City> CheckIfCityExistsAndGetAsync(Guid cityId, bool trackChanges)
         {
-            var city = await _cityRepository.GetByIdAsync(cityId, trackChanges);
+            var city = await _cityRepository.GetCityByIdWithIncludedCountry(cityId, trackChanges);
             if (city == null)
                 throw new CityNotFoundException();
 

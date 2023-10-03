@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
+using Musicians.Domain.Models;
 using Musicians.Domain.RequestParameters;
-using Musicians.Infrastructure.Models;
 
 namespace Musicians.Infrastructure.Persistance.Utilities.MusicianBuilders
 {

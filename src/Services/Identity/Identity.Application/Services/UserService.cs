@@ -12,6 +12,10 @@ using Shared.Constants;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Identity.Application.Interfaces.ServiceHelpers;
+using Identity.Application.Interfaces.MessageBroker.Producer;
+using Shared.Messages.IdentityMessages;
+using Microsoft.Extensions.Options;
+using Identity.Application.Options;
 
 namespace Identity.Application.Services
 {
@@ -25,6 +29,8 @@ namespace Identity.Application.Services
         private readonly IMapper _mapper;
         private readonly ILogger<UserService> _logger;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ITransactionalEventProducer _eventProducer;
+        private readonly IOptions<KafkaTopicOptions> _options;
 
         public UserService(UserManager<User> userManager,
             RoleManager<Role> roleManager,
@@ -33,8 +39,9 @@ namespace Identity.Application.Services
             ICityServiceHelper cityServiceHelper,
             ICityRepository cityRepository,
             ILogger<UserService> logger,
-            IHttpContextAccessor contextAccessor
-            )
+            IHttpContextAccessor contextAccessor,
+            ITransactionalEventProducer eventProducer,
+            IOptions<KafkaTopicOptions> options)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -44,23 +51,27 @@ namespace Identity.Application.Services
             _cityRepository = cityRepository;
             _logger = logger;
             _contextAccessor = contextAccessor;
+            _eventProducer = eventProducer;
+            _options = options;
         }
 
         public async Task<UserResponseDto> CreateUserAsync(UserRequestDto user)
         {
             var city = await _cityServiceHelper.CheckIfCityExistsAndGetAsync(user.CityId, false);
-            var userDto = _mapper.Map<User>(user);
-            var result = await _userManager.CreateAsync(userDto, user.Password);
+            var createdUser = _mapper.Map<User>(user);
+            var result = await _userManager.CreateAsync(createdUser, user.Password);
             if (!result.Succeeded)
             {
                 throw new UserInvalidCredentialsBadRequestException(result.Errors.First().Description.ToString() ?? "Invalid credentials");
             }
-            _logger.LogInformation("User with {Id} id was successfully created", userDto.Id);
-            await _userManager.AddToRoleAsync(userDto, RoleNamesConstants.UserRoleName);
-            userDto.City = city;
-            var userToReturn = _mapper.Map<UserResponseDto>(userDto);
-
-            return userToReturn;
+            _logger.LogInformation("User with {Id} id was successfully created", createdUser.Id);
+            createdUser.City = city;
+            var userCreatedMessage = _mapper.Map<UserCreatedMessage>(createdUser);
+            await _eventProducer.ProduceAsync<UserCreatedMessage>(_options.Value.IdentityTopic, createdUser.Id.ToString(), userCreatedMessage);
+            await _cityRepository.SaveChangesAsync();
+            await _userManager.AddToRoleAsync(createdUser, RoleNamesConstants.UserRoleName);
+            var userDto = _mapper.Map<UserResponseDto>(createdUser);
+            return userDto;
         }
 
         public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()

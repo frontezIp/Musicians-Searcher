@@ -1,11 +1,11 @@
 ﻿using MongoDB.Driver;
 using Musicians.Application.Interfaces.Persistance;
-using Musicians.Infrastructure.Models;
 using Musicians.Infrastructure.Persistance.Contexts;
 using Musicians.Domain.RequestParameters;
 using Musicians.Infrastructure.Persistance.Utilities.MusicianBuilders;
 using Musicians.Domain.RequestFeatures;
 using MongoDB.Bson.Serialization;
+using Musicians.Domain.Models;
 
 namespace Musicians.Infrastructure.Persistance.Repositories
 {
