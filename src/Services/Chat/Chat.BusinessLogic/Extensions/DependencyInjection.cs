@@ -17,6 +17,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Shared.Messages.IdentityMessages;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Chat.BusinessLogic.Grpc.Interceptors;
+using Chat.BusinessLogic.Grpc.v1.Clients.Implementations;
+using Chat.BusinessLogic.Grpc.v1.Clients.Interfaces;
+using Chat.BusinessLogic.Options;
+using Musicians.Application.Grpc.v1;
 
 namespace Chat.BusinessLogic.Extensions
 {
@@ -31,6 +36,7 @@ namespace Chat.BusinessLogic.Extensions
             services.ConfigureOptions(configuration);
             services.ConfigureMessageHandlers();
             services.ConfigureMessageOutboxConsumers(configuration);
+            services.ConfigureGrpcClient();
         }
 
         private static void AddMappings(this IServiceCollection services)
@@ -69,7 +75,8 @@ namespace Chat.BusinessLogic.Extensions
             services.AddScoped<IChatParticipantService, ChatParticipantService>();
             services.AddScoped<IChatRoomService, ChatRoomService>();    
             services.AddScoped<IChatRoleService, ChatRoleService>();    
-            services.AddScoped<IMessageService, MessageService>();  
+            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IMessengerUserService, MessengerUserService>();
         }
 
         private static void ConfigureServiceHelpers(this IServiceCollection services)
@@ -79,6 +86,18 @@ namespace Chat.BusinessLogic.Extensions
             services.AddScoped<IMessengerUserServiceHelper, MessengerUserServiceHelper>();
             services.AddScoped<IChatRoomServiceHelper, ChatRoomServiceHelper>();
             services.AddScoped<IChatRoleServiceHelper, ChatRoleServiceHelper>();
+        }
+
+
+        private static void ConfigureGrpcClient(this IServiceCollection services)
+        {
+            services.AddScoped<ErrorInterceptor>();
+            services.AddScoped<IMusicianClient, MusicianClient>();
+            services.AddGrpcClient<Musician.MusicianClient>((p, o) =>
+            {
+                var grpcConfig = p.GetRequiredService<IOptions<GrpcConfigOptions>>();
+                o.Address = new Uri(grpcConfig.Value.MusicianUrl);
+            }).AddInterceptor<ErrorInterceptor>();
         }
 
         private static void ConfigureConsumers(this IServiceCollection services, IConfiguration configuration)
@@ -108,6 +127,7 @@ namespace Chat.BusinessLogic.Extensions
             services.Configure<ChatRolesOptions>(configuration.GetSection(nameof(ChatRolesOptions)));
             services.Configure<ConsumerConfig>(configuration.GetSection(nameof(ConsumerConfig)));
             services.Configure<KafkaTopicOptions>(configuration.GetSection(nameof(KafkaTopicOptions)));
+            services.Configure<GrpcConfigOptions>(configuration.GetSection(nameof(GrpcConfigOptions)));
         }
 
         private static void ConfigureFluentValidators(this IServiceCollection services)
