@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using Musicians.Application.Grpc.v1.Interceptors;
 using Musicians.Application.Interfaces.Persistance;
 using Musicians.Infrastructure.Kafka.BackgroundConsumers;
 using Musicians.Infrastructure.Kafka.ConfigOptions;
@@ -28,6 +29,7 @@ namespace Musicians.Infrastructure.Extensions
             services.ConfigureOptions(configuration);
             services.ConfigureMessageOutboxConsumers(configuration);
             services.ConfigureMessageHandlers();
+            services.ConfigureGrpc();
         }
 
         private static void ConfigureMongo(this IServiceCollection services, IConfiguration configuration)
@@ -40,6 +42,12 @@ namespace Musicians.Infrastructure.Extensions
                 var mongoClient = new MongoClient(mongoDbSettings!.ConnectionString);
                 return mongoClient.GetDatabase(mongoDbSettings.Database);
             });
+        }
+
+        private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<ConsumerConfig>(configuration.GetSection(nameof(ConsumerConfig)));
+            services.Configure<KafkaTopicOptions>(configuration.GetSection(nameof(KafkaTopicOptions)));
         }
 
         private static void ConfigureMessageHandlers(this IServiceCollection services)
@@ -68,6 +76,15 @@ namespace Musicians.Infrastructure.Extensions
         private static void ConfigureContext(this IServiceCollection services)
         {
             services.AddScoped<MusiciansContext>();
+        }
+
+        private static void ConfigureGrpc(this IServiceCollection services)
+        {
+            services.AddGrpc(options =>
+            {
+                options.Interceptors.Add<LoggerInterceptor>();
+                options.Interceptors.Add<ExceptionInterceptor>();
+            });
         }
 
         private static void ConfigureRepositories(this IServiceCollection services)
