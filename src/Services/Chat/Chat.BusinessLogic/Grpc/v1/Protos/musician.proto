@@ -1,0 +1,46 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Musicians.Application.Grpc.v1";
+
+package musician.v1;
+
+import "google/protobuf/wrappers.proto";
+
+service Musician {
+	rpc GetMusicianProfile(GetMusicianInformationRequest) returns (GetMusicianInformationResponse);
+	rpc GetMusicianFriends(GetMusicianFriendsRequest) returns (GetMusicianFriendsResponse);
+}
+
+message GetMusicianInformationRequest {
+	string id = 1;
+} 
+
+message GetMusicianInformationResponse {
+	string id = 1;
+	google.protobuf.StringValue goal = 2;
+	int32 age = 3;
+	string location = 4;
+	google.protobuf.StringValue biography = 5;
+	int32 subscribers_count = 6;
+	int32 friends_count = 7;
+} 
+
+message GetMusicianFriendsRequest{
+	string id = 1;
+}
+
+message GetMusicianFriendsResponse{
+	message MusicianFriendInfo{
+		string id = 1;
+		google.protobuf.StringValue goal = 2;
+		int32 age = 3;
+		string location = 4;
+		google.protobuf.StringValue biography = 5;
+		int32 subscribers_count = 6;
+		int32 friends_count = 7;
+		string username = 8;
+		string full_name = 9;
+	}
+
+	repeated MusicianFriendInfo friends = 1;
+}
