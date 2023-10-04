@@ -82,6 +82,13 @@ namespace Chat.BusinessLogic.Services.Implementations
                 throw new MessengerUsersAlreadyExistsAsChatParticipantsException($"Some of the given messenger users" +
                     $" are already exists as chat participants in the chat room with {chatRoomId} id");
 
+            var areAllFriends = await _chatParticipantServiceHelper.CheckIfAllAreFriendsAsync(messengerUserId, messengerUserIdsToAdd);
+
+            if (!areAllFriends)
+            {
+                throw new AddUnfamiliarMessengerUsersInTheChatRoomBadRequestException(messengerUserId, chatRoomId);
+            }
+
             var chatRole = await _chatRoleServiceHelper.CheckIfChatRoleExistsAndGetByNameAsync(_chatRolesOptions.Value.User, false, cancellationToken);
 
             var possibleChatParticipants = messengerUsers.Select(user => new ChatParticipant
