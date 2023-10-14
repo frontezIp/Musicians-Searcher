@@ -10,5 +10,12 @@ namespace Chat.DataAccess.Repositories.Implementations
         public ChatRoomRepository(ChatContext context) : base(context)
         {
         }
+
+        public async Task DeleteEmptyChatRoomsAsync(CancellationToken cancellationToken = default)
+        {
+            var chatRooms = await GetByCondition(chatRoom => !chatRoom.ChatParticipants.Any(), true).ToListAsync(cancellationToken);
+            DeleteMany(chatRooms);
+            await SaveChangesAsync(cancellationToken);
+        }
     }
 }
