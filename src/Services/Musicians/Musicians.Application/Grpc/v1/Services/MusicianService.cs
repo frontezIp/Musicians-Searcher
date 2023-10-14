@@ -13,15 +13,12 @@ namespace Musicians.Application.Grpc.v1.Services
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        private readonly ILogger<MusicianService> _logger;
 
         public MusicianService(IMediator mediator,
-            IMapper mapper,
-            ILogger<MusicianService> logger)
+            IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public override async Task<GetMusicianInformationResponse> GetMusicianProfile(GetMusicianInformationRequest request, ServerCallContext context)
