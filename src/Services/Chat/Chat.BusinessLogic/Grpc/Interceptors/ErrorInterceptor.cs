@@ -33,7 +33,7 @@ namespace Chat.BusinessLogic.Grpc.Interceptors
             catch (RpcException ex)
             {
                 _logger.LogError("Grpc related error occured. Status - {StatusCode}, message - {Message}", ex.StatusCode, ex.Message);
-                throw new Exception("Something bad happened");
+                throw new Exception("Grpc related error occured");
 
             }
         }
