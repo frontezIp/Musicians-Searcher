@@ -72,7 +72,20 @@ namespace Chat.BusinessLogic.Services.Implementations
         public async Task<ChatRoomResponseDto> CreateChatRoomAsync(Guid messengerUserId, CreateChatRoomRequestDto chatRoomRequestDto, CancellationToken cancellationToken = default)
         {
             var creator = await _messengerUserServiceHelper.CheckIfMessengerUserExistsAndGetAsync(messengerUserId, false, cancellationToken);
-            var possibleChatParticipants = await _messengerUserServiceHelper.CheckIfMessengerUsersByGivenIdsExistsAndGetAsync(chatRoomRequestDto.MessengerUsersIdsToAdd, false, cancellationToken);
+            var possibleChatParticipants = await _messengerUserServiceHelper.CheckIfMessengerUsersByGivenIdsExistsAndGetAsync(chatRoomRequestDto.MessengerUsersIdsToAdd,
+                false,
+                cancellationToken);
+
+            if (chatRoomRequestDto.MessengerUsersIdsToAdd.Count > 0)
+            {
+                var areAllFriends = await _chatParticipantServiceHelper.CheckIfAllAreFriendsAsync(messengerUserId,
+                    chatRoomRequestDto.MessengerUsersIdsToAdd);
+
+                if (!areAllFriends)
+                {
+                    throw new CreateChatRoomWithUnfamiliarMessengerUsersBadRequestException(messengerUserId);
+                }
+            }
 
             var creatorChatRole = await _chatRoleServiceHelper.CheckIfChatRoleExistsAndGetByNameAsync(_chatRoleOptions.Value.Creator, false, cancellationToken);
             var userChatRole = await _chatRoleServiceHelper.CheckIfChatRoleExistsAndGetByNameAsync(_chatRoleOptions.Value.User, false, cancellationToken);

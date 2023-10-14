@@ -4,6 +4,7 @@ namespace Chat.BusinessLogic.Helpers.Interfaces
 {
     public interface IChatParticipantServiceHelper
     {
+        Task<bool> CheckIfAllAreFriendsAsync(Guid issuerId, IEnumerable<Guid> friendsIdsToCheck);
         Task<ChatParticipant> CheckIfChatParticipantExistsAndGetAsync(Guid chatRoomid, Guid chatParticipantId, bool trackChanges, CancellationToken cancellationToken);
         Task CheckIfChatParticipantExistsAsync(Guid chatRoomId, Guid chatParticipantId, CancellationToken cancellationToken);
         Task<ChatParticipant> CheckIfChatParticipantExistsByGivenMessengerUserAndChatRoomIdAndGetAsync(Guid messengerUserId, Guid chatRoomId, bool trackChanges, CancellationToken cancellationToken);

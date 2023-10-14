@@ -1,6 +1,7 @@
 using Musicians.API.Extensions;
 using Musicians.API.Middlewares;
 using Musicians.Application.Extensions;
+using Musicians.Application.Grpc.v1.Services;
 using Musicians.Infrastructure.Extensions;
 using Serilog;
 
@@ -34,6 +35,8 @@ app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapGrpcService<MusicianService>();
 
 app.MapControllers();
 
