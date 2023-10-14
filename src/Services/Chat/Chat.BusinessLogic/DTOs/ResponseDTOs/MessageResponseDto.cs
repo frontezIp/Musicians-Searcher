@@ -1,6 +1,4 @@
-﻿using Chat.DataAccess.Models;
-
-namespace Chat.BusinessLogic.DTOs.ResponseDTOs
+﻿namespace Chat.BusinessLogic.DTOs.ResponseDTOs
 {
     public class MessageResponseDto
     {

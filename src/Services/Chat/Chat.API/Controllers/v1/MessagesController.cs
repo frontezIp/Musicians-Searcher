@@ -22,11 +22,16 @@ namespace Chat.API.Controllers.v1
             Guid chatRoomId,
             [FromBody] CreateMessageRequestDto createMessageRequestDto)
         {
-            await _messageService.CreateMessageAsync(messengerUserId, chatRoomId,
+           var messageResponseDto = await _messageService.CreateMessageAsync(messengerUserId, chatRoomId,
                 createMessageRequestDto,
                 HttpContext.RequestAborted);
 
-            return Ok();
+            if (messageResponseDto is null)
+            {
+                return Ok();
+            }
+
+            return Ok(messageResponseDto);
         }
 
         [HttpDelete]
