@@ -1,7 +1,9 @@
 using Chat.API.Extensions;
+using Chat.API.Filters;
 using Chat.API.Middlewares;
 using Chat.BusinessLogic.Extensions;
 using Chat.DataAccess.Extensions;
+using Hangfire;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +38,15 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new DashboardAuthorizationFilter() }
+});
+
 await app.ApplyMigrations();
 await DataSeeder.SeedAsync(app);
+
+app.UseHangfireRecurringJobs(app.Configuration);
+
 app.Run();
