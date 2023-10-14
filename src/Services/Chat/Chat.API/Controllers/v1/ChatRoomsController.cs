@@ -62,7 +62,7 @@ namespace Chat.API.Controllers.v1
             return CreatedAtRoute("ChatRoomById", new { messengerUserId = messengerUserId, chatRoomId = result.Id, getMessageRequestDto = getChatRoomRequest }, result);
         }
 
-        [HttpPut("chatRoomId")]
+        [HttpPut("{chatRoomId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -73,6 +73,19 @@ namespace Chat.API.Controllers.v1
             await _chatRoomsService.UpdateChatRoomAsync(messengerUserId,
                 chatRoomId,
                 updateChatRoomRequestDto,
+                HttpContext.RequestAborted);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{chatRoomId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> QuitChatRoomAsync(Guid messengerUserId,
+            Guid chatRoomId)
+        {
+            await _chatRoomsService.QuitChatRoomAsync(messengerUserId,
+                chatRoomId,
                 HttpContext.RequestAborted);
 
             return NoContent();
