@@ -15,6 +15,7 @@ using Chat.DataAccess.Specifications.ChatRoomSpecifications;
 using Chat.DataAccess.Specifications.MessagesSpecification;
 using MapsterMapper;
 using Microsoft.Extensions.Options;
+using System.Threading;
 
 namespace Chat.BusinessLogic.Services.Implementations
 {
@@ -149,6 +150,24 @@ namespace Chat.BusinessLogic.Services.Implementations
             chatRoomDto.Messages = chatRoomMessagesDtos.ToList();
 
             return chatRoomDto;
+        }
+
+        public async Task QuitChatRoomAsync(Guid messengerUserId, Guid chatRoomId, CancellationToken cancellationToken = default)
+        {
+            await _messengerUserServiceHelper.CheckIfMessengerUserExistsAsync(messengerUserId, cancellationToken);
+            var chatRoom = await _chatRoomServiceHelper.CheckIfChatRoomExistsAndGetByIdAsync(chatRoomId, false, cancellationToken);
+            var chatParticipant = await _chatParticipantServiceHelper.CheckIfChatParticipantExistsByGivenMessengerUserAndChatRoomIdAndGetAsync(messengerUserId, chatRoomId, true, cancellationToken);
+
+            _chatParticipantRepository.Delete(chatParticipant);
+            chatRoom.MembersNumber -= 1;
+            _chatRoomRepository.Update(chatRoom);
+
+            await _chatParticipantRepository.SaveChangesAsync();
+        }
+
+        public Task DeleteEmptyChatRoomsAsync(CancellationToken cancellationToken)
+        {
+            return _chatRoomRepository.DeleteEmptyChatRoomsAsync(cancellationToken);
         }
     }
 }
