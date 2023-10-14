@@ -7,7 +7,7 @@ namespace Musicians.API.Extensions
     {
         public static void ConfigureAPI(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddControllers();
+            services.ConfigureControllers();
             services.ConfigureVersioning();
             services.ConfigureCors();
             services.ConfigureAuthentication(configuration);
