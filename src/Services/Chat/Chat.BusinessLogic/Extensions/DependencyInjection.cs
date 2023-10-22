@@ -22,6 +22,7 @@ using Chat.BusinessLogic.Grpc.v1.Clients.Implementations;
 using Chat.BusinessLogic.Grpc.v1.Clients.Interfaces;
 using Chat.BusinessLogic.Options;
 using Musicians.Application.Grpc.v1;
+using Chat.BusinessLogic.Options.HangfireOptions;
 
 namespace Chat.BusinessLogic.Extensions
 {
@@ -37,6 +38,7 @@ namespace Chat.BusinessLogic.Extensions
             services.ConfigureMessageHandlers();
             services.ConfigureMessageOutboxConsumers(configuration);
             services.ConfigureGrpcClient();
+            services.ConfigureHangfire(configuration);
         }
 
         private static void AddMappings(this IServiceCollection services)
@@ -128,6 +130,7 @@ namespace Chat.BusinessLogic.Extensions
             services.Configure<ConsumerConfig>(configuration.GetSection(nameof(ConsumerConfig)));
             services.Configure<KafkaTopicOptions>(configuration.GetSection(nameof(KafkaTopicOptions)));
             services.Configure<GrpcConfigOptions>(configuration.GetSection(nameof(GrpcConfigOptions)));
+            services.Configure<HangfireOptions>(configuration.GetSection(nameof(HangfireOptions)));
         }
 
         private static void ConfigureFluentValidators(this IServiceCollection services)

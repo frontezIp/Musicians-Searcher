@@ -9,7 +9,7 @@ namespace Identity.API
         public static void ConfigureAPI(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddControllers();
+            services.ConfigureControllers();
             services.ConfigureVersioning();
             services.ConfigureCors();
             services.ConfigureSwagger(configuration);

@@ -3,8 +3,6 @@ using Chat.BusinessLogic.Grpc.v1.Clients.Interfaces;
 using Chat.BusinessLogic.Helpers.Interfaces;
 using Chat.BusinessLogic.Services.Interfaces;
 using MapsterMapper;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Options;
 
 namespace Chat.BusinessLogic.Services.Implementations
 {
@@ -12,7 +10,6 @@ namespace Chat.BusinessLogic.Services.Implementations
     {
         private readonly IMessengerUserServiceHelper _messengerUserServiceHelper;
         private readonly IMusicianClient _musicianClient;
-        private readonly IDistributedCache _distributedCache;
         private readonly IMapper _mapper;
 
         public MessengerUserService(IMessengerUserServiceHelper messengerUserServiceHelper,

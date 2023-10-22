@@ -6,6 +6,9 @@ using Chat.DataAccess.Repositories.Interfaces;
 using MapsterMapper;
 using Chat.BusinessLogic.Exceptions.BadRequestException;
 using Chat.DataAccess.Specifications.ChatParticipantSpecifications;
+using Chat.BusinessLogic.HangfireServices.Interfaces;
+using Hangfire;
+using Chat.BusinessLogic.DTOs.ResponseDTOs;
 
 namespace Chat.BusinessLogic.Services.Implementations
 {
@@ -42,9 +45,20 @@ namespace Chat.BusinessLogic.Services.Implementations
             _chatRoomRepository = chatRoomRepository;
         }
 
-        public async Task CreateMessageAsync(Guid messengerUserId, Guid chatRoomId, CreateMessageRequestDto createMessageRequestDto, CancellationToken cancellationToken = default)
+        public async Task<MessageResponseDto?> CreateMessageAsync(Guid messengerUserId, Guid chatRoomId, CreateMessageRequestDto createMessageRequestDto, CancellationToken cancellationToken = default)
         {
-            await _messengerUserServiceHelper.CheckIfMessengerUserExistsAsync(messengerUserId, cancellationToken);
+            if (createMessageRequestDto.Delay != null)
+            {
+                var delay = createMessageRequestDto.Delay.Value;
+
+                createMessageRequestDto.Delay = null;
+                BackgroundJob.Schedule<IHangfireMessageService>(service =>
+                    service.SendDelayedMessageAsync(messengerUserId, chatRoomId, createMessageRequestDto, CancellationToken.None), delay - DateTime.Now);
+
+                return null;
+            }
+
+            var messengerUser = await _messengerUserServiceHelper.CheckIfMessengerUserExistsAndGetAsync(messengerUserId, false, cancellationToken);
             var chatRoom = await _chatRoomServiceHelper.CheckIfChatRoomExistsAndGetByIdAsync(chatRoomId, true, cancellationToken);
             await _chatParticipantServiceHelper.CheckIfChatParticipantExistsByGivenMessengerUserAndChatRoomIdAsync(messengerUserId, chatRoomId, cancellationToken);
 
@@ -59,6 +73,12 @@ namespace Chat.BusinessLogic.Services.Implementations
             _chatRoomRepository.Update(chatRoom);
 
             await _chatRoomRepository.SaveChangesAsync();
+
+            var messageResponseDto = _mapper.Map<MessageResponseDto>(newMessage);
+            var messengerUserResponseDto = _mapper.Map<MessengerUserResponseDto>(messengerUser);
+            messageResponseDto.MessengerUser = messengerUserResponseDto;
+
+            return messageResponseDto;
         }
 
         public async Task DeleteMessagesAsync(Guid messengerUserId, Guid chatRoomId, IEnumerable<Guid> messagesToDeleteIds, CancellationToken cancellationToken = default)

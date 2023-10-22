@@ -9,10 +9,12 @@ namespace Chat.BusinessLogic.Services.Interfaces
     public interface IChatRoomService
     {
         Task<ChatRoomResponseDto> CreateChatRoomAsync(Guid messengerUserId, CreateChatRoomRequestDto chatRoomRequestDto, CancellationToken cancellationToken = default);
+        Task DeleteEmptyChatRoomsAsync(CancellationToken none);
         Task<ChatRoomResponseDto> GetChatRoomAsync(Guid messengerUserId, Guid chatRoomId, GetMessagesRequestDto getMessagesRequestDto, CancellationToken cancellationToken = default);
         Task<(IEnumerable<ChatRoomResponseDto> chatRooms, MetaData metaData)> GetChatRoomsOfGivenMessengerUserAsync(Guid messengerUserId,
             PaginatedUserChatRoomsRequestDto paginatedUserChatRoomsRequestDto,
             CancellationToken cancellationToken = default);
+        Task QuitChatRoomAsync(Guid messengerUserId, Guid chatRoomId, CancellationToken cancellationToken = default);
         Task UpdateChatRoomAsync(Guid messengerUserId, Guid chatRoomId, UpdateChatRoomRequestDto chatRoomUpdateRequestDto, CancellationToken cancellationToken = default);
     }
 }
