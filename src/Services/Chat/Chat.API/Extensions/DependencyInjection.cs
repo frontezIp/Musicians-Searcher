@@ -13,7 +13,7 @@ namespace Chat.API.Extensions
             services.ConfigureAuthentication(configuration);
             services.ConfigureAuthorization();
             services.ConfigureSwagger(configuration);
-
+            services.ConfigureRedis(configuration);
         }
 
         private static void ConfigureVersioning(this IServiceCollection services)
