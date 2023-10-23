@@ -44,6 +44,8 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
     Authorization = new[] { new DashboardAuthorizationFilter() }
 });
 
+app.MapHubs();
+
 await app.ApplyMigrations();
 await DataSeeder.SeedAsync(app);
 
