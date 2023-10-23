@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorize</title>
+</head>
+<body class="auth_body">
+    <div class="auth_container">
+        <form class="form" id="auth_login">
+            <h1 class="auth_form_title">Login</h1>
+            <div id="error-message" class="auth_form_message auth_form-error" hidden>Incorrect username/password combination</div>
+            <div class="auth_form_input_group">
+                <input type="text" id="usernameInput" class="form-control auth_form_input" autofocus placeholder="Username" aria-label="Username">
+            </div>
+            <div class="auth_form_input_group">
+                <input id="passwordInput" type="password" class="form-control auth_form_input" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2">
+                <div class="auth_form_input-error-message"></div>
+            </div>
+            <button id="login" class="btn btn-primary auth_form_button" type="button">Login</button>
+        </form>
+    </div>
+</body>
+</html>
