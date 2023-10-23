@@ -1,12 +1,12 @@
 ﻿using Chat.BusinessLogic.DTOs.RequestDTOs;
 using Chat.BusinessLogic.DTOs.RequestDTOs.ChatRoomRequestsDTOs;
 using Chat.BusinessLogic.DTOs.RequestDTOs.MessageRequestsDTOs;
+using Chat.BusinessLogic.Extensions;
 using Chat.BusinessLogic.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chat.API.Controllers.v1
 {
-    [Route("api/{v:apiversion}/messenger-users/{messengerUserId}/[controller]")]
     public class ChatRoomsController : BaseApiController
     {
         private readonly IChatRoomService _chatRoomsService;
@@ -20,9 +20,10 @@ namespace Chat.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetChatRoomsAsync(Guid messengerUserId,
-            [FromQuery]PaginatedUserChatRoomsRequestDto paginatedUserChatRoomsRequestDto)
+        public async Task<IActionResult> GetChatRoomsAsync([FromQuery] PaginatedUserChatRoomsRequestDto paginatedUserChatRoomsRequestDto)
         {
+            var messengerUserId = HttpContext.User.GetUserIdFromClaims();
+
             var result = await _chatRoomsService.GetChatRoomsOfGivenMessengerUserAsync(messengerUserId,
                 paginatedUserChatRoomsRequestDto,
                 HttpContext.RequestAborted);
@@ -36,9 +37,11 @@ namespace Chat.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetChatRoomAsync(Guid messengerUserId, Guid chatRoomId,
-            [FromQuery]GetMessagesRequestDto getMessagesRequestDto)
+        public async Task<IActionResult> GetChatRoomAsync(Guid chatRoomId,
+            [FromQuery] GetMessagesRequestDto getMessagesRequestDto)
         {
+            var messengerUserId = HttpContext.User.GetUserIdFromClaims();
+
             var result = await _chatRoomsService.GetChatRoomAsync(messengerUserId, chatRoomId,
                 getMessagesRequestDto,
                 HttpContext.RequestAborted);
@@ -50,9 +53,10 @@ namespace Chat.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> CreateChatRoomAsync(Guid messengerUserId, 
-            [FromBody]CreateChatRoomRequestDto createChatRoomRequestDto) 
+        public async Task<IActionResult> CreateChatRoomAsync([FromBody] CreateChatRoomRequestDto createChatRoomRequestDto)
         {
+            var messengerUserId = HttpContext.User.GetUserIdFromClaims();
+
             var result = await _chatRoomsService.CreateChatRoomAsync(messengerUserId,
                 createChatRoomRequestDto,
                 HttpContext.RequestAborted);
@@ -66,10 +70,11 @@ namespace Chat.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateChatRoomAsync(Guid messengerUserId, 
-            Guid chatRoomId,
-            [FromBody]UpdateChatRoomRequestDto updateChatRoomRequestDto)
+        public async Task<IActionResult> UpdateChatRoomAsync(Guid chatRoomId,
+            [FromBody] UpdateChatRoomRequestDto updateChatRoomRequestDto)
         {
+            var messengerUserId = HttpContext.User.GetUserIdFromClaims();
+
             await _chatRoomsService.UpdateChatRoomAsync(messengerUserId,
                 chatRoomId,
                 updateChatRoomRequestDto,
@@ -78,12 +83,13 @@ namespace Chat.API.Controllers.v1
             return NoContent();
         }
 
-        [HttpDelete("{chatRoomId}")]
+        [HttpDelete("chatRoomId")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> QuitChatRoomAsync(Guid messengerUserId,
-            Guid chatRoomId)
+        public async Task<IActionResult> QuitChatRoomAsync(Guid chatRoomId)
         {
+            var messengerUserId = HttpContext.User.GetUserIdFromClaims();
+
             await _chatRoomsService.QuitChatRoomAsync(messengerUserId,
                 chatRoomId,
                 HttpContext.RequestAborted);
