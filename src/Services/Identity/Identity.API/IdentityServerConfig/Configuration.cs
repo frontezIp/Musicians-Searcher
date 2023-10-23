@@ -8,28 +8,55 @@ namespace Identity.API.IdentityServerConfig
     public static class Configuration
     {
 
-        public static IEnumerable<IdentityResource> GetIdentityResources() =>
-            new List<IdentityResource>
+        public static IEnumerable<IdentityResource> GetIdentityResources()
+        {
+            return new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile()
             };
+        }
 
-        public static IEnumerable<ApiScope> GetApiScopes() =>
-            new List<ApiScope>
+        public static IEnumerable<ApiScope> GetApiScopes()
+        {
+            return new List<ApiScope>
             {
                 new ApiScope(ApiResourcesConstants.MUSICIANS_API_RESOURCE_NAME, "Full Access"),
                 new ApiScope(ApiResourcesConstants.CHAT_API_RESOURCE_NAME, "Full Access")
             };
+        }
 
-        public static IEnumerable<ApiResource> GetApis() =>
-            new List<ApiResource> {
-                new ApiResource(ApiResourcesConstants.MUSICIANS_API_RESOURCE_NAME) {Scopes = {ApiResourcesConstants.MUSICIANS_API_RESOURCE_NAME}},
-                new ApiResource(ApiResourcesConstants.CHAT_API_RESOURCE_NAME) {Scopes = {ApiResourcesConstants.CHAT_API_RESOURCE_NAME}}
+        public static IEnumerable<ApiResource> GetApis()
+        {
+            return new List<ApiResource> {
+                new ApiResource(ApiResourcesConstants.MUSICIANS_API_RESOURCE_NAME)
+                {
+                    ApiSecrets = new List<Secret>
+                    {
+                        new Secret(ApiResourcesConstants.API_RESOURCES_SECRET.ToSha256())
+                    },
+                    Scopes =
+                    {
+                        ApiResourcesConstants.MUSICIANS_API_RESOURCE_NAME
+                    }
+                },
+                new ApiResource(ApiResourcesConstants.CHAT_API_RESOURCE_NAME)
+                {
+                    ApiSecrets = new List<Secret>
+                    {
+                        new Secret(ApiResourcesConstants.API_RESOURCES_SECRET.ToSha256())
+                    },
+                    Scopes =
+                    {
+                        ApiResourcesConstants.CHAT_API_RESOURCE_NAME
+                    }
+                }
             };
+        }
 
-        public static IEnumerable<Client> GetClients() =>
-            new List<Client> 
+        public static IEnumerable<Client> GetClients()
+        {
+            return new List<Client>
             {
                 new Client
                 {
@@ -37,7 +64,7 @@ namespace Identity.API.IdentityServerConfig
                     ClientSecrets = { new Secret(SwaggerClientConstants.CLIENT_SECRET.ToSha256())},
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     RequireConsent = false,
-                    AllowedScopes = 
+                    AllowedScopes =
                     {
                         ApiResourcesConstants.CHAT_API_RESOURCE_NAME,
                         IdentityServerConstants.LocalApi.ScopeName,
@@ -45,7 +72,22 @@ namespace Identity.API.IdentityServerConfig
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
                     }
+                },
+                 new Client
+                {
+                    ClientId = JavascriptClientConstants.CLIENT_ID,
+                    ClientSecrets = { new Secret(JavascriptClientConstants.CLIENT_SECRET.ToSha256()) },
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    RequireConsent = false,
+                    AllowedScopes =
+                    {
+                        ApiResourcesConstants.CHAT_API_RESOURCE_NAME,
+                        IdentityServerConstants.LocalApi.ScopeName,
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    }
                 }
             };
+        }
     }
 }

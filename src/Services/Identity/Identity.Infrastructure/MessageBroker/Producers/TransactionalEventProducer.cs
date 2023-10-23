@@ -1,7 +1,6 @@
 ﻿using Confluent.Kafka;
 using Identity.Application.Interfaces.MessageBroker.Producer;
 using Identity.Infrastructure.MessageBroker.TranscationalOutbox;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Shared.Enums;
 using Shared.Messages;
