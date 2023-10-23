@@ -1,4 +1,6 @@
-﻿using IdentityServer4.AccessTokenValidation;
+﻿using Chat.BusinessLogic.Options.SignalROptions;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Chat.API.Extensions
 {
@@ -10,8 +12,27 @@ namespace Chat.API.Extensions
             .AddJwtBearer("Bearer", options =>
             {
                 options.RequireHttpsMetadata = false;
-                options.Audience = "Musicians";
+                options.Audience = "Chat";
                 options.Authority = configuration["IdentityServer:IssuerUri"];
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        // If the request is for our hub...
+                        var path = context.HttpContext.Request.Path;
+                        var signalOptions = new SignalRConfigOptions();
+                        configuration.GetSection(nameof(SignalRConfigOptions)).Bind(signalOptions);
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments($"/{signalOptions.ChatHubName}")))
+                        {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
         }
     }
