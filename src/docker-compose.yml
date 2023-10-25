@@ -60,7 +60,11 @@ services:
         container_name: kafdrop
         depends_on:
             - kafka
-    
+            
+    redis:
+        image: redis:latest
+        container_name: Redis
+        
     logstash01:
         depends_on:
             - es01

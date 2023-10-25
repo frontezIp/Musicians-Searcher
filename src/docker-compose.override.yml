@@ -1,6 +1,11 @@
 version: '3.8'
 
 services:
+    redis:
+        ports:
+            - 6379:6379
+        restart: unless-stopped 
+
     sqlserver: 
         ports:
           - 1433:1433
@@ -86,7 +91,7 @@ services:
             - 9000:9000
         environment:
             KAFKA_BROKERCONNECT: kafka:9092
-    
+            
     logstash01:
         user: root
         ports:
