@@ -1,0 +1,17 @@
+filebeat.inputs:
+-   type: filestream
+    id: default-filestream
+    paths:
+        - logs_ingest/ChatLogs/*.json
+        - logs_ingest/IdentityLogs/*.json
+        - logs_ingest/MusicianLogs/*.json  
+    
+setup.kibana:
+    host: http://kibana:5601
+    username: elastic
+    password: elastic123
+
+
+output.logstash:
+    hosts: "logstash01:5044"
+    
