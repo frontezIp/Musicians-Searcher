@@ -6,5 +6,6 @@
 
         public const string MUSICIANS_API_RESOURCE_NAME = "Musicians";
 
+        public const string API_RESOURCES_SECRET = "Secret";
     }
 }

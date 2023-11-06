@@ -13,6 +13,7 @@ namespace Chat.API.Extensions
             services.ConfigureAuthentication(configuration);
             services.ConfigureAuthorization();
             services.ConfigureSwagger(configuration);
+            services.ConfigureSignalR();
             services.ConfigureRedis(configuration);
         }
 
@@ -31,9 +32,10 @@ namespace Chat.API.Extensions
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", builder =>
-                builder.AllowAnyOrigin()
-                .AllowAnyMethod()
+                builder.AllowAnyMethod()
                 .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)
+                .AllowCredentials()
                 .WithExposedHeaders("X-Pagination"));
             });
         }
