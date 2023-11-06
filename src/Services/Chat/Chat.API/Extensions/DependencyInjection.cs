@@ -14,6 +14,7 @@ namespace Chat.API.Extensions
             services.ConfigureAuthorization();
             services.ConfigureSwagger(configuration);
             services.ConfigureSignalR();
+            services.ConfigureRedis(configuration);
         }
 
         private static void ConfigureVersioning(this IServiceCollection services)
